@@ -29,17 +29,20 @@ import './App.css';
 
 //export default App;
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import LoginPage from './LoginPage';
+import LoginPage from './Login'; 
+import FirebaseTest from './FirebaseTest';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/test" element={<FirebaseTest />} />
       </Routes>
     </Router>
   );
 }
 
 export default App;
+
 

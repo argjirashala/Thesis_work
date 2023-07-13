@@ -1,10 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
+  let navigate = useNavigate();
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+    // put your login logic here
+
+    // after logging in, navigate to the main page
+    navigate("/");
+  }
+
   return (
     <div>
       <h1>Login</h1>
-      <form>
+      <form onSubmit={handleLogin}>
         <label>
           Username:
           <input type="text" name="username" />
@@ -15,7 +26,7 @@ function LoginPage() {
           <input type="password" name="password" />
         </label>
         <br />
-        <input type="submit" value="Login" />
+        <button type="submit">Login</button>
       </form>
     </div>
   );
