@@ -1,5 +1,5 @@
 //import logo from './logo.svg';
-import './App.css';
+
 
 // function App() {
 //   return (
@@ -28,9 +28,15 @@ import './App.css';
 // }
 
 //export default App;
+import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './Login'; 
 import FirebaseTest from './FirebaseTest';
+import RegisterPage from './RegisterPage';
+
+
+
+
 
 function App() {
   return (
@@ -38,6 +44,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/test" element={<FirebaseTest />} />
+        <Route path="/register" element={<RegisterPage />} />
       </Routes>
     </Router>
   );

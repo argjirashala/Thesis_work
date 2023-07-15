@@ -1,6 +1,6 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
     apiKey: "AIzaSyAdSI0BaFYvdJzsbUyFb68au6JHpr-B1bk",
@@ -10,10 +10,8 @@ const firebaseConfig = {
     messagingSenderId: "634132668222", // replace 'your-sender-id' with your actual sender id
     appId: "1:634132668222:web:xxxxxxxxxxxxxx" // replace 'your-app-id' with your actual app id
 };
-      
-  
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-export const auth = firebase.auth();
-export const firestore = firebase.firestore();
+export const auth = getAuth(app);
+export const db = getFirestore(app);
