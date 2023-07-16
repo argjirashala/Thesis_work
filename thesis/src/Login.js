@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from './firebase';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+
 
 function LoginPage() {
-  const [formData, setFormData] = useState({ username: '', password: '' });
+  const auth = getAuth(); // initialize auth
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [isDoctor, setIsDoctor] = useState(false);
   const [error, setError] = useState(null);
 
@@ -12,23 +14,30 @@ function LoginPage() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  
 
-    const userCollection = isDoctor ? 'doctors' : 'patients';
-    const userQuery = await getDocs(query(collection(db, userCollection), where("username", "==", formData.username)));
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+    const db = getFirestore();
 
-    if (userQuery.empty) {
-      setError('Username does not exist. If you have not registered please do!');
+    // Create a query against the collection
+    const q = query(collection(db, "doctors"), where("email", "==", formData.email));
+
+    const querySnapshot = await getDocs(q);
+    // If no docs were found, querySnapshot will be empty
+    if ((!querySnapshot.empty && isDoctor) || (querySnapshot.empty && !isDoctor)) {
+      window.location.href = isDoctor ? 'http://localhost:3000/indexDoctor.js' : 'http://localhost:3000/indexPatient.js';
     } else {
-      const userData = userQuery.docs[0].data();
-      if (userData.password !== formData.password) {
-        setError('Incorrect password!');
-      } else {
-        window.location.href = isDoctor ? 'http://localhost:3000/indexDoctor.js' : 'http://localhost:3000/indexPatient.js';
-      }
-    }    
-  };
+      setError('Invalid role selection!');
+    }
+  } catch (error) {
+    setError('Invalid email or password!');
+  }    
+};
+
+  
 
   return (
     <div>
@@ -40,8 +49,8 @@ function LoginPage() {
         </label>
         <br />
         <label>
-          Username:
-          <input type="text" name="username" onChange={handleChange} required />
+          Email:
+          <input type="text" name="email" onChange={handleChange} required />
         </label>
         <br />
         <label>
@@ -58,4 +67,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-

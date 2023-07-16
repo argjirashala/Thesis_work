@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from './firebase';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
 
 function RegisterPage() {
+  const auth = getAuth(); // initialize auth
   const [formData, setFormData] = useState({
     personalID: '',
     name: '',
@@ -12,7 +15,6 @@ function RegisterPage() {
     address: '',
     phone: '',
     email: '',
-    username: '',
     password: '',
     confirmPassword: '',
   });
@@ -66,20 +68,29 @@ function RegisterPage() {
     // Query firestore for uniqueness of personalID, email and username
     const personalIDExists = await (await getDocs(query(collection(db, "patients"), where("personalID", "==", formData.personalID)))).size > 0;
     const emailExists = await (await getDocs(query(collection(db, "patients"), where("email", "==", formData.email)))).size > 0;
-    const usernameExists = await (await getDocs(query(collection(db, "patients"), where("username", "==", formData.username)))).size > 0;
 
-    if (personalIDExists || emailExists || usernameExists) {
-      setErrors(["Personal ID, email or username already exists. They must be unique."]);
+    if (personalIDExists || emailExists) {
+      setErrors(["User already exists!"]);
       return;
     }
 
     try {
-        await addDoc(collection(db, "patients"), formData);
-        setErrors(["Registration successful!"]);
+      // create an authentication account for the user with Firebase Authentication
+      await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      
+      // remove password fields from formData
+      delete formData.password;
+      delete formData.confirmPassword;
+
+      // add the rest of the form data to Firestore
+      await addDoc(collection(db, "patients"), formData);
+
+      setErrors(["Registration was successful!"]);
     } catch (error) {
-        setErrors([`Error adding document: ${error}`]);
+      setErrors([`Error adding document: ${error}`]);
     }
   };
+  
 
   return (
     <div>
@@ -132,11 +143,6 @@ function RegisterPage() {
         </label>
         <br></br>
         <label>
-          Username:
-          <input type="text" name="username" onChange={handleChange} />
-        </label>
-        <label>
-        <br></br>
           Password:
           <input type="password" name="password" onChange={handleChange} />
         </label>

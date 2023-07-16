@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from './firebase';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 function RegisterDoc() {
+  const auth = getAuth(); // initialize authv
   const [formData, setFormData] = useState({
     personalID: '',
     name: '',
@@ -12,9 +14,8 @@ function RegisterDoc() {
     clinic: '',
     address: '',
     phone: '',
-    email: '',
     specialization: '',
-    username: '',
+    email: '',
     password: '',
     confirmPassword: '',
   });
@@ -52,7 +53,7 @@ function RegisterDoc() {
 
     // Check if password length is between 8 and 20 characters, contains at least one number and rest can be letters
     if (!passwordPattern.test(formData.password)) {
-      newErrors.push("Password should be between 8 and 20 characters, contain at least one number, and the rest can be letters.");
+      newErrors.push("Password should be between 8 and 20 characters and contain at least one number.");
     }
 
     // Check if email is valid
@@ -68,18 +69,26 @@ function RegisterDoc() {
     // Query firestore for uniqueness of personalID, email and username
     const personalIDExists = await (await getDocs(query(collection(db, "doctors"), where("personalID", "==", formData.personalID)))).size > 0;
     const emailExists = await (await getDocs(query(collection(db, "doctors"), where("email", "==", formData.email)))).size > 0;
-    const usernameExists = await (await getDocs(query(collection(db, "doctors"), where("username", "==", formData.username)))).size > 0;
 
-    if (personalIDExists || emailExists || usernameExists) {
-      setErrors(["Personal ID, email or username already exists. They must be unique."]);
+    if (personalIDExists || emailExists) {
+      setErrors(["User already exist!"]);
       return;
     }
 
     try {
-        await addDoc(collection(db, "doctors"), formData);
-        setErrors(["Registration successful!"]);
+      // create an authentication account for the user with Firebase Authentication
+      await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      
+      // remove password fields from formData
+      delete formData.password;
+      delete formData.confirmPassword;
+
+      // add the rest of the form data to Firestore
+      await addDoc(collection(db, "doctors"), formData);
+
+      setErrors(["Registration was successful!"]);
     } catch (error) {
-        setErrors([`Error adding document: ${error}`]);
+      setErrors([`Error adding document: ${error}`]);
     }
   };
 
@@ -194,11 +203,6 @@ function RegisterDoc() {
         </label>
         <br></br>
         <label>
-          Username:
-          <input type="text" name="username" onChange={handleChange} />
-        </label>
-        <label>
-        <br></br>
           Password:
           <input type="password" name="password" onChange={handleChange} />
         </label>
