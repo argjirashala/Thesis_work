@@ -33,6 +33,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './Login'; 
 import FirebaseTest from './FirebaseTest';
 import RegisterPage from './RegisterPage';
+import RegisterDoc from './RegisterDoc'
 
 
 
@@ -45,6 +46,7 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/test" element={<FirebaseTest />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/registerdoc" element={<RegisterDoc />} />
       </Routes>
     </Router>
   );
