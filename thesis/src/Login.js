@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+
+
 
 
 function LoginPage() {
@@ -8,6 +11,8 @@ function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isDoctor, setIsDoctor] = useState(false);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,15 +31,17 @@ const handleSubmit = async (e) => {
     const q = query(collection(db, "doctors"), where("email", "==", formData.email));
 
     const querySnapshot = await getDocs(q);
+    
     // If no docs were found, querySnapshot will be empty
     if ((!querySnapshot.empty && isDoctor) || (querySnapshot.empty && !isDoctor)) {
-      window.location.href = isDoctor ? 'http://localhost:3000/indexDoctor.js' : 'http://localhost:3000/indexPatient.js';
+      const userId = userCredential.user.uid;
+      navigate(isDoctor ? `/indexDoctor/${userId}` : `/indexPatient/${userId}`);
     } else {
       setError('Invalid role selection!');
     }
   } catch (error) {
     setError('Invalid email or password!');
-  }    
+  }        
 };
 
   
@@ -61,8 +68,7 @@ const handleSubmit = async (e) => {
         <button type="submit">Login</button>
       </form>
       {error && <div className="error">{error}</div>}
-      <button onClick={() => window.location.href = isDoctor ? 'http://localhost:3000/registerdoc' : 'http://localhost:3000/register'}>Register</button>
-    </div>
+      <button onClick={() => navigate(isDoctor ? '/registerdoc' : '/register')}>Register</button>    </div>
   );
 }
 
