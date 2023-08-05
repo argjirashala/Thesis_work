@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, setDoc, doc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from './firebase';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -66,8 +66,9 @@ function RegisterPage() {
     }
 
     // Query firestore for uniqueness of personalID, email and username
-    const personalIDExists = await (await getDocs(query(collection(db, "patients"), where("personalID", "==", formData.personalID)))).size > 0;
-    const emailExists = await (await getDocs(query(collection(db, "patients"), where("email", "==", formData.email)))).size > 0;
+    const personalIDExists = (await getDocs(query(collection(db, "patients"), where("personalID", "==", formData.personalID)))).size > 0;
+    const emailExists = (await getDocs(query(collection(db, "patients"), where("email", "==", formData.email)))).size > 0;
+
 
     if (personalIDExists || emailExists) {
       setErrors(["User already exists!"]);
@@ -76,14 +77,18 @@ function RegisterPage() {
 
     try {
       // create an authentication account for the user with Firebase Authentication
-      await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-      
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      const uid = userCredential.user.uid;
       // remove password fields from formData
       delete formData.password;
       delete formData.confirmPassword;
 
-      // add the rest of the form data to Firestore
-      await addDoc(collection(db, "patients"), formData);
+      const patientRef = doc(db, "patients", uid);
+
+      // set the document data using the reference
+      await setDoc(patientRef, formData);
+
+      
 
       setErrors(["Registration was successful!"]);
     } catch (error) {

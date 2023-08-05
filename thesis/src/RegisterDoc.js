@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { addDoc,doc, setDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from './firebase';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -77,14 +77,15 @@ function RegisterDoc() {
 
     try {
       // create an authentication account for the user with Firebase Authentication
-      await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-      
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      const uid = userCredential.user.uid;
       // remove password fields from formData
       delete formData.password;
       delete formData.confirmPassword;
 
       // add the rest of the form data to Firestore
-      await addDoc(collection(db, "doctors"), formData);
+      const docRef = doc(db, "doctors", uid);
+      await setDoc(docRef, formData);
 
       setErrors(["Registration was successful!"]);
     } catch (error) {
