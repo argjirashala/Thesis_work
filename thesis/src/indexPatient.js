@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
 function PatientPage() {
   const [doctors, setDoctors] = useState([]);
   const [specialization, setSpecialization] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [availableSlots, setAvailableSlots] = useState([]);
   const [appointment, setAppointment] = useState({
     reason: "",
     date: "",
@@ -12,19 +14,36 @@ function PatientPage() {
   });
   const db = getFirestore();
 
+  const [availableDates, setAvailableDates] = useState([]);
+
+
   useEffect(() => {
     const fetchDoctors = async () => {
       if (specialization !== "") {
         const q = query(collection(db, "doctors"), where("specialization", "==", specialization));
         const querySnapshot = await getDocs(q);
-
-        const fetchedDoctors = querySnapshot.docs.map(doc => doc.data());
+        const fetchedDoctors = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setDoctors(fetchedDoctors);
       }
     };
     
     fetchDoctors();
   }, [specialization]);
+
+
+  useEffect(() => {
+    if (selectedDoctor) {
+      setAvailableDates(Object.keys(selectedDoctor.availability || {}));
+    }
+}, [selectedDoctor]);
+
+useEffect(() => {
+  if (selectedDoctor && selectedDate) {
+    const slots = selectedDoctor.availability[selectedDate] || "";
+    setAvailableSlots(slots.split(","));
+  }
+}, [selectedDoctor, selectedDate]);
+
   
   const handleSelect = (e) => {
     setSpecialization(e.target.value);
@@ -39,15 +58,36 @@ function PatientPage() {
     setAppointment({ reason: "", date: "", time: "" });
   };
 
+  const handleSlotSelection = (slot) => {
+    setAppointment({ ...appointment, time: slot });
+  };
+
   const handleInputChange = (e) => {
-    setAppointment({ ...appointment, [e.target.name]: e.target.value });
+      if (e.target.name === "date") {
+        setSelectedDate(e.target.value);
+      }
+      setAppointment({ ...appointment, [e.target.name]: e.target.value });
   };
   
-  const handleBookAppointment = () => {
-    // Implement logic for booking the appointment
+  
+  const handleBookAppointment = async () => {
+    // Implement logic for booking the appointment, such as adding it to an 'appointments' collection
     console.log("Appointment booked:", appointment, selectedDoctor);
+    
+    // Mark the slot as booked in the doctor's availability
+    const dateKey = selectedDate.toISOString().split("T")[0];
+    const updatedSlots = availableSlots.filter(slot => slot !== appointment.time).join(",");
+    
+    // This part needs a little bit of adjustment
+    const docRef = doc(db, "doctors", selectedDoctor.id);
+    const doctor = await getDoc(docRef);
+    const currentAvailability = doctor.data().availability || {};
+    currentAvailability[dateKey] = updatedSlots;
+    await updateDoc(docRef, { availability: currentAvailability });
+
     handleClose();
   };
+
   return (
     <div>
       <select onChange={handleSelect}>
@@ -113,24 +153,29 @@ function PatientPage() {
         </div>
       ))}
       {selectedDoctor && (
-        <div className="modal">
-          <h2>Book Appointment with {selectedDoctor.name} {selectedDoctor.surname}</h2>
-          <label>
-            Reason:
-            <textarea name="reason" onChange={handleInputChange} required />
-          </label>
-          <label>
-            Date:
-            <input type="date" name="date" onChange={handleInputChange} required />
-          </label>
-          <label>
-            Time:
-            <input type="time" name="time" onChange={handleInputChange} required />
-          </label>
-          <button onClick={handleBookAppointment}>Confirm</button>
-          <button onClick={handleClose}>Cancel</button>
-        </div>
-      )}
+    <div className="modal">
+      <h2>Book Appointment with {selectedDoctor.name} {selectedDoctor.surname}</h2>
+      <label>
+        Reason:
+        <textarea name="reason" onChange={handleInputChange} required />
+      </label>
+      <label>
+        Date:
+        <select name="date" onChange={handleInputChange}>
+            <option>--Select Date--</option>
+            {availableDates.map(date => (
+                <option key={date} value={date}>{date}</option>
+            ))}
+        </select>
+      </label>
+      {availableSlots.map(slot => (
+        <button key={slot} onClick={() => handleSlotSelection(slot)}>{slot}</button>
+      ))}
+      <button onClick={handleBookAppointment}>Confirm</button>
+      <button onClick={handleClose}>Cancel</button>
+    </div>
+)}
+
     </div>
   );
 }
