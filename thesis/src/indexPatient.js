@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, query, where, getDocs, doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import React, { useState, useEffect} from 'react';
+import { useParams } from "react-router-dom";
+import { getFirestore, collection, query, where, getDocs, doc,addDoc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
 function PatientPage() {
+  const { userId } = useParams();
   const [doctors, setDoctors] = useState([]);
   const [specialization, setSpecialization] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState(null);
@@ -15,6 +17,8 @@ function PatientPage() {
   const db = getFirestore();
 
   const [availableDates, setAvailableDates] = useState([]);
+  const [bookedAppointments, setBookedAppointments] = useState([]);
+
 
 
   useEffect(() => {
@@ -44,6 +48,28 @@ useEffect(() => {
   }
 }, [selectedDoctor, selectedDate]);
 
+useEffect(() => {
+  const fetchBookedAppointments = async () => {
+    const q = query(collection(db, "appointments"), where("patientId", "==", userId)); // Replace with actual patient's ID
+    const querySnapshot = await getDocs(q);
+    const fetchedAppointments = querySnapshot.docs.map(doc => doc.data());
+  
+    for (let appointment of fetchedAppointments) {
+      const docRef = doc(db, "doctors", appointment.doctorId);
+      const doctorSnapshot = await getDoc(docRef);
+
+      if (doctorSnapshot.exists()) {
+        appointment.doctorName = doctorSnapshot.data().name;
+        appointment.doctorSurname = doctorSnapshot.data().surname;
+      }
+    }
+    setBookedAppointments(fetchedAppointments);
+  };
+  
+  fetchBookedAppointments();
+}, []);
+
+
   
   const handleSelect = (e) => {
     setSpecialization(e.target.value);
@@ -71,22 +97,32 @@ useEffect(() => {
   
   
   const handleBookAppointment = async () => {
-    // Implement logic for booking the appointment, such as adding it to an 'appointments' collection
     console.log("Appointment booked:", appointment, selectedDoctor);
     
-    // Mark the slot as booked in the doctor's availability
-    const dateKey = selectedDate.toISOString().split("T")[0];
+    const dateKey = new Date(selectedDate).toISOString().split("T")[0];
+
     const updatedSlots = availableSlots.filter(slot => slot !== appointment.time).join(",");
     
-    // This part needs a little bit of adjustment
+    // Update the doctor's availability in Firestore
     const docRef = doc(db, "doctors", selectedDoctor.id);
     const doctor = await getDoc(docRef);
     const currentAvailability = doctor.data().availability || {};
     currentAvailability[dateKey] = updatedSlots;
     await updateDoc(docRef, { availability: currentAvailability });
-
+  
+    // Add the new appointment to the 'appointments' collection in Firestore
+    const appointmentRef = collection(db, 'appointments');
+    await addDoc(appointmentRef, {
+      patientId: userId,  // Replace with actual patient's ID
+      doctorId: selectedDoctor.id,
+      date: appointment.date,
+      time: appointment.time,
+      reason: appointment.reason,
+    });
+  
     handleClose();
   };
+  
 
   return (
     <div>
@@ -175,6 +211,19 @@ useEffect(() => {
       <button onClick={handleClose}>Cancel</button>
     </div>
 )}
+
+<div className="booked-appointments">
+  <h2>Your Booked Appointments</h2>
+  {bookedAppointments.map(appointment => (
+    <div key={`${appointment.date}-${appointment.time}`}>
+      <p>Doctor: {appointment.doctorName} {appointment.doctorSurname}</p>
+      <p>Date: {appointment.date}</p>
+      <p>Time: {appointment.time}</p>
+      <p>Reason: {appointment.reason}</p>
+    </div>
+  ))}
+</div>
+
 
     </div>
   );

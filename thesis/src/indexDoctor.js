@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useParams } from "react-router-dom";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
 
 function DoctorPage() {
   const { userId } = useParams();
   const [doctorDetails, setDoctorDetails] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [availability, setAvailability] = useState({}); // Store availability as an object with dates as keys
+  const [availability, setAvailability] = useState({});
+  const [bookedAppointments, setBookedAppointments] = useState([]); // Store booked appointments
   const db = getFirestore();
 
   useEffect(() => {
@@ -27,13 +28,47 @@ function DoctorPage() {
     fetchDoctorDetails();
   }, [userId]);
 
+  // useEffect(() => {
+  //   const fetchBookedAppointments = async () => {
+  //     const q = query(collection(db, "appointments"), where("doctorId", "==", userId));
+  //     const querySnapshot = await getDocs(q);
+  //     const appointments = querySnapshot.docs.map(doc => doc.data());
+  //     setBookedAppointments(appointments);
+  //   };
+
+  //   fetchBookedAppointments();
+  // }, [userId]);
+
+  useEffect(() => {
+    const fetchBookedAppointments = async () => {
+      const q = query(collection(db, "appointments"), where("doctorId", "==", userId));
+      const querySnapshot = await getDocs(q);
+      const appointments = querySnapshot.docs.map(doc => doc.data());
+
+      for (let appointment of appointments) {
+        const patientRef = doc(db, "patients", appointment.patientId);
+        const patientSnapshot = await getDoc(patientRef);
+
+        if (patientSnapshot.exists()) {
+          appointment.patientName = patientSnapshot.data().name;
+          appointment.patientSurname = patientSnapshot.data().surname;
+        }
+      }
+
+      setBookedAppointments(appointments);
+    };
+
+    fetchBookedAppointments();
+  }, [userId]);
+
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
   const handleTimeChange = (e) => {
     const time = e.target.value;
-    const dateKey = selectedDate.toISOString().split("T")[0]; // Convert date to string
+    const dateKey = selectedDate.toISOString().split("T")[0];
     setAvailability({
       ...availability,
       [dateKey]: time,
@@ -64,9 +99,22 @@ function DoctorPage() {
         />
       </label>
       <button onClick={handleSaveAvailability}>Save Availability</button>
+      
+      {/* Display booked appointments */}
+      <div>
+        <h2>Your Booked Appointments</h2>
+        {bookedAppointments.map((appointment, index) => (
+          <div key={index}>
+            <p>Patient: {appointment.patientName}  {appointment.patientSurname}</p>
+            <p>Reason: {appointment.reason}</p>
+            <p>Date: {appointment.date}</p>
+            <p>Time: {appointment.time}</p>
+            {/* Add more fields as needed */}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
 export default DoctorPage;
-
