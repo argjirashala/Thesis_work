@@ -11,6 +11,8 @@ function DoctorPage() {
   const [availability, setAvailability] = useState({});
   const [bookedAppointments, setBookedAppointments] = useState([]); // Store booked appointments
   const db = getFirestore();
+  const [currentDiagnosisAppointment, setCurrentDiagnosisAppointment] = useState(null);
+  const [diagnosisText, setDiagnosisText] = useState('');
 
   useEffect(() => {
     const fetchDoctorDetails = async () => {
@@ -43,7 +45,7 @@ function DoctorPage() {
     const fetchBookedAppointments = async () => {
       const q = query(collection(db, "appointments"), where("doctorId", "==", userId));
       const querySnapshot = await getDocs(q);
-      const appointments = querySnapshot.docs.map(doc => doc.data());
+      const appointments = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })); // Include the doc.id
 
       for (let appointment of appointments) {
         const patientRef = doc(db, "patients", appointment.patientId);
@@ -59,7 +61,8 @@ function DoctorPage() {
     };
 
     fetchBookedAppointments();
-  }, [userId]);
+}, [userId]);
+
 
 
   const handleDateChange = (date) => {
@@ -84,6 +87,19 @@ function DoctorPage() {
   const dateKey = selectedDate.toISOString().split("T")[0];
   const selectedTime = availability[dateKey] || "";
 
+  const handleDiagnosisChange = (e) => {
+    setDiagnosisText(e.target.value);
+  };
+
+  const handleSaveDiagnosis = async (appointmentId) => {
+    const appointmentRef = doc(db, "appointments", appointmentId);
+    await setDoc(appointmentRef, { diagnosis: diagnosisText }, { merge: true });
+    // Reset states after saving
+    setCurrentDiagnosisAppointment(null);
+    setDiagnosisText('');
+    alert("Diagnosis saved successfully!");
+  };
+
   return (
     <div>
       <h1>Welcome, Dr. {doctorDetails?.name}</h1>
@@ -103,15 +119,23 @@ function DoctorPage() {
       {/* Display booked appointments */}
       <div>
         <h2>Your Booked Appointments</h2>
-        {bookedAppointments.map((appointment, index) => (
-          <div key={index}>
+        {bookedAppointments.map((appointment) => (
+          <div key={appointment.id}> {/* Use appointment.id as key */}
             <p>Patient: {appointment.patientName}  {appointment.patientSurname}</p>
             <p>Reason: {appointment.reason}</p>
             <p>Date: {appointment.date}</p>
             <p>Time: {appointment.time}</p>
-            {/* Add more fields as needed */}
+            <button onClick={() => setCurrentDiagnosisAppointment(appointment.id)}>Add Diagnosis</button>
+
+            {currentDiagnosisAppointment === appointment.id && (
+              <div>
+                <textarea value={diagnosisText} onChange={handleDiagnosisChange}></textarea>
+                <button onClick={() => handleSaveDiagnosis(appointment.id)}>Save Diagnosis</button>
+              </div>
+            )}
           </div>
-        ))}
+))}
+
       </div>
     </div>
   );

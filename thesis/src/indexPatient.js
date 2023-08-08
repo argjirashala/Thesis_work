@@ -18,6 +18,7 @@ function PatientPage() {
 
   const [availableDates, setAvailableDates] = useState([]);
   const [bookedAppointments, setBookedAppointments] = useState([]);
+  const [appointmentToShow, setAppointmentToShow] = useState(null);
 
 
 
@@ -68,6 +69,28 @@ useEffect(() => {
   
   fetchBookedAppointments();
 }, []);
+
+useEffect(() => {
+  const fetchDiagnosisForAppointments = async () => {
+    const updatedAppointments = [...bookedAppointments];
+
+    for (let appointment of updatedAppointments) {
+      const docRef = doc(db, "diagnosis", `${appointment.patientId}-${appointment.doctorId}-${appointment.date}`);
+      const diagnosisDoc = await getDoc(docRef);
+
+      if (diagnosisDoc.exists()) {
+        appointment.diagnosis = diagnosisDoc.data().text;
+      }
+    }
+
+    setBookedAppointments(updatedAppointments);
+  };
+
+  if (bookedAppointments.length > 0) {
+    fetchDiagnosisForAppointments();
+  }
+}, [bookedAppointments]);
+
 
 
   
@@ -215,13 +238,19 @@ useEffect(() => {
 <div className="booked-appointments">
   <h2>Your Booked Appointments</h2>
   {bookedAppointments.map(appointment => (
-    <div key={`${appointment.date}-${appointment.time}`}>
-      <p>Doctor: {appointment.doctorName} {appointment.doctorSurname}</p>
-      <p>Date: {appointment.date}</p>
-      <p>Time: {appointment.time}</p>
-      <p>Reason: {appointment.reason}</p>
-    </div>
-  ))}
+  <div key={`${appointment.date}-${appointment.time}`}>
+    <p>Doctor: {appointment.doctorName} {appointment.doctorSurname}</p>
+    <p>Date: {appointment.date}</p>
+    <p>Time: {appointment.time}</p>
+    <p>Reason: {appointment.reason}</p>
+    {appointment.diagnosis && (
+      <>
+        <button onClick={() => setAppointmentToShow(appointment)}>Show Diagnosis</button>
+        {appointmentToShow === appointment && <p>Diagnosis: {appointment.diagnosis}</p>}
+      </>
+    )}
+  </div>
+))}
 </div>
 
 
