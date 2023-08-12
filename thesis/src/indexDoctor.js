@@ -14,6 +14,9 @@ function DoctorPage() {
   const [currentDiagnosisAppointment, setCurrentDiagnosisAppointment] = useState(null);
   const [diagnosisText, setDiagnosisText] = useState('');
   const [therapyText, setTherapyText] = useState('');
+  const [currentPatientAppointments, setCurrentPatientAppointments] = useState(null);
+  const [currentDetailsAppointment, setCurrentDetailsAppointment] = useState(null);
+  const [modifyAppointment, setModifyAppointment] = useState(null);
 
   useEffect(() => {
     const fetchDoctorDetails = async () => {
@@ -31,16 +34,6 @@ function DoctorPage() {
     fetchDoctorDetails();
   }, [userId]);
 
-  // useEffect(() => {
-  //   const fetchBookedAppointments = async () => {
-  //     const q = query(collection(db, "appointments"), where("doctorId", "==", userId));
-  //     const querySnapshot = await getDocs(q);
-  //     const appointments = querySnapshot.docs.map(doc => doc.data());
-  //     setBookedAppointments(appointments);
-  //   };
-
-  //   fetchBookedAppointments();
-  // }, [userId]);
 
   useEffect(() => {
     const fetchBookedAppointments = async () => {
@@ -63,6 +56,14 @@ function DoctorPage() {
 
     fetchBookedAppointments();
 }, [userId]);
+
+const togglePatientAppointments = (patientId) => {
+  if (currentPatientAppointments === patientId) {
+    setCurrentPatientAppointments(null);  // If already expanded, collapse
+  } else {
+    setCurrentPatientAppointments(patientId); // Else expand
+  }
+};
 
 
 
@@ -106,46 +107,110 @@ function DoctorPage() {
     alert("Diagnosis and therapy saved successfully!");
   };
 
-  return (
-    <div>
-      <h1>Welcome, Dr. {doctorDetails?.name}</h1>
-      <h3>Set Your Availability</h3>
-      <DatePicker selected={selectedDate} onChange={handleDateChange} />
-      <label>
-        Times:
-        <input
-          type="text"
-          placeholder="09:00-12:00,14:00-16:00"
-          onChange={handleTimeChange}
-          value={selectedTime}
-        />
-      </label>
-      <button onClick={handleSaveAvailability}>Save Availability</button>
-      
-      {/* Display booked appointments */}
-      <div>
-        <h2>Your Booked Appointments</h2>
-        {bookedAppointments.map((appointment) => (
-          <div key={appointment.id}>
-            <p>Patient: {appointment.patientName}  {appointment.patientSurname}</p>
-            <p>Reason: {appointment.reason}</p>
-            <p>Date: {appointment.date}</p>
-            <p>Time: {appointment.time}</p>
-            <button onClick={() => setCurrentDiagnosisAppointment(appointment.id)}>Add Diagnosis and Therapy</button>
+  // Sorting the booked appointments
+const sortedAppointments = bookedAppointments.sort((a, b) => {
+  const dateA = new Date(a.date);  // Assuming `date` is the field name in your appointment object
+  const dateB = new Date(b.date);
 
-            {currentDiagnosisAppointment === appointment.id && (
+  // Current or future dates first, past dates later
+  if (dateA < new Date() && dateB >= new Date()) {
+    return 1;
+  }
+  if (dateA >= new Date() && dateB < new Date()) {
+    return -1;
+  }
+  return dateA - dateB;  // Otherwise, sort by date ascending
+});
+
+ return (
+  <div>
+    <h1>Welcome, Dr. {doctorDetails?.name}</h1>
+    <h3>Set Your Availability</h3>
+    <DatePicker selected={selectedDate} onChange={handleDateChange} />
+    <label>
+      Times:
+      <input
+        type="text"
+        placeholder="09:00-12:00,14:00-16:00"
+        onChange={handleTimeChange}
+        value={selectedTime}
+      />
+    </label>
+    <button onClick={handleSaveAvailability}>Save Availability</button>
+    <div>
+      <h2>Your Booked Appointments</h2>
+      
+      {[...new Set(sortedAppointments.map(app => app.patientId))].map(patientId => {
+        const patientAppointments = sortedAppointments.filter(app => app.patientId === patientId);
+        const firstAppointment = patientAppointments[0];
+        
+        return (
+          <div key={patientId}>
+            <p>Patient: {firstAppointment.patientName} {firstAppointment.patientSurname}</p>
+            <button onClick={() => togglePatientAppointments(patientId)}>Appointments</button>
+
+            {currentPatientAppointments === patientId && (
               <div>
-                <textarea value={diagnosisText} onChange={handleDiagnosisChange} placeholder="Enter diagnosis..."></textarea>
-                <textarea value={therapyText} onChange={handleTherapyChange} placeholder="Enter therapy..."></textarea>  {/* Input for therapy */}
-                <button onClick={() => handleSaveDiagnosisAndTherapy(appointment.id)}>Save Diagnosis and Therapy</button>
+                {patientAppointments.map(appointment => (
+                  <div key={appointment.id}>
+                    {/* Display appointment details */}
+                    Patient's name: {appointment.patientName}
+                    <br />
+                    Patient's surname: {appointment.patientSurname}
+                    <br />
+                    Date: {appointment.date}
+                    <br />
+                    Time: {appointment.time}
+                    <br />
+                    
+                    {appointment.diagnosis && appointment.therapy ? (
+                      <div>
+                        <button onClick={() => setCurrentDetailsAppointment(appointment.id)}>Details</button>
+                        <button onClick={() => setModifyAppointment(appointment.id)}>Modify</button>
+
+                        {currentDetailsAppointment === appointment.id && (
+                          <div>
+                            <p>Diagnosis: {appointment.diagnosis}</p>
+                            <p>Therapy: {appointment.therapy}</p>
+                          </div>
+                        )}
+
+                        {modifyAppointment === appointment.id && (
+                          <div>
+                            <textarea value={diagnosisText} onChange={handleDiagnosisChange} placeholder="Enter diagnosis..."></textarea>
+                            <textarea value={therapyText} onChange={handleTherapyChange} placeholder="Enter therapy..."></textarea>
+                            <button onClick={() => {
+                              handleSaveDiagnosisAndTherapy(appointment.id);
+                              setModifyAppointment(null);
+                            }}>Save Changes</button>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <button onClick={() => setCurrentDiagnosisAppointment(appointment.id)}>Add Diagnosis and Therapy</button>
+                    )}
+
+                    {currentDiagnosisAppointment === appointment.id && (
+                      <div>
+                        <textarea value={diagnosisText} onChange={handleDiagnosisChange} placeholder="Enter diagnosis..."></textarea>
+                        <textarea value={therapyText} onChange={handleTherapyChange} placeholder="Enter therapy..."></textarea>
+                        <button onClick={() => {
+                          handleSaveDiagnosisAndTherapy(appointment.id);
+                          setCurrentDiagnosisAppointment(null);
+                        }}>Save Diagnosis and Therapy</button>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
           </div>
-        ))}
-
-      </div>
+        );
+      })}
     </div>
-  );
+  </div>
+);
+
 }
 
 export default DoctorPage;
