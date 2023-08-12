@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useParams } from "react-router-dom";
 import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 function DoctorPage() {
   const { userId } = useParams();
@@ -17,6 +18,8 @@ function DoctorPage() {
   const [currentPatientAppointments, setCurrentPatientAppointments] = useState(null);
   const [currentDetailsAppointment, setCurrentDetailsAppointment] = useState(null);
   const [modifyAppointment, setModifyAppointment] = useState(null);
+  const [uploadingFile, setUploadingFile] = useState(null);
+
 
   useEffect(() => {
     const fetchDoctorDetails = async () => {
@@ -106,6 +109,44 @@ const togglePatientAppointments = (patientId) => {
     setTherapyText('');
     alert("Diagnosis and therapy saved successfully!");
   };
+ 
+  
+
+  const handleFileUpload = async (file, appointmentId) => {
+    if (!file) {
+      alert("Please select a file to upload first!");
+      return;
+    }
+    const storage = getStorage();
+    const storageRef = ref(storage, 'files/' + appointmentId + "/" + file.name);
+
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+            // Progress handling can be added here
+        },
+        (error) => {
+            console.error("File upload error:", error);
+        },
+        async () => {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            const appointmentRef = doc(db, "appointments", appointmentId);
+            await setDoc(appointmentRef, { fileURL: downloadURL }, { merge: true });
+            setUploadingFile(null);
+        }
+    );
+};
+const handleFileChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setUploadingFile(file);
+  } else {
+    alert("Failed to select file. Please try again!");
+  }
+}
+
+
 
   // Sorting the booked appointments
 const sortedAppointments = bookedAppointments.sort((a, b) => {
@@ -188,7 +229,13 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
                       </div>
                     ) : (
                       <button onClick={() => setCurrentDiagnosisAppointment(appointment.id)}>Add Diagnosis and Therapy</button>
+                      
                     )}
+                    <input type="file" onChange={handleFileChange} />
+<button onClick={() => {
+    handleFileUpload(uploadingFile, appointment.id);
+}}>Upload File</button>
+
 
                     {currentDiagnosisAppointment === appointment.id && (
                       <div>

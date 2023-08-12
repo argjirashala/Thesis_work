@@ -245,8 +245,17 @@ useEffect(() => {
     <p>Reason: {appointment.reason}</p>
     {appointment.diagnosis && (
       <>
-        <button onClick={() => setAppointmentToShow(appointment)}>Show Diagnosis</button>
-        {appointmentToShow === appointment && <p>Diagnosis: {appointment.diagnosis}</p>}
+        <button onClick={() => setAppointmentToShow(appointment)}>Show Diagnosis and Therapy</button>
+        {appointmentToShow === appointment && (
+          <>
+            <p>Diagnosis: {appointment.diagnosis}</p>
+            <p>Therapy: {appointment.therapy}</p>
+          </>
+        )}
+        {appointment.fileURL && (
+    <a href={appointment.fileURL} download>Download File</a>
+)}
+
       </>
     )}
   </div>
