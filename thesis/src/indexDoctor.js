@@ -13,6 +13,7 @@ function DoctorPage() {
   const db = getFirestore();
   const [currentDiagnosisAppointment, setCurrentDiagnosisAppointment] = useState(null);
   const [diagnosisText, setDiagnosisText] = useState('');
+  const [therapyText, setTherapyText] = useState('');
 
   useEffect(() => {
     const fetchDoctorDetails = async () => {
@@ -91,13 +92,18 @@ function DoctorPage() {
     setDiagnosisText(e.target.value);
   };
 
-  const handleSaveDiagnosis = async (appointmentId) => {
+  const handleTherapyChange = (e) => {   // Handle therapy change
+    setTherapyText(e.target.value);
+  };
+
+  const handleSaveDiagnosisAndTherapy = async (appointmentId) => {
     const appointmentRef = doc(db, "appointments", appointmentId);
-    await setDoc(appointmentRef, { diagnosis: diagnosisText }, { merge: true });
+    await setDoc(appointmentRef, { diagnosis: diagnosisText, therapy: therapyText }, { merge: true }); // Save both diagnosis and therapy
     // Reset states after saving
     setCurrentDiagnosisAppointment(null);
     setDiagnosisText('');
-    alert("Diagnosis saved successfully!");
+    setTherapyText('');
+    alert("Diagnosis and therapy saved successfully!");
   };
 
   return (
@@ -120,21 +126,22 @@ function DoctorPage() {
       <div>
         <h2>Your Booked Appointments</h2>
         {bookedAppointments.map((appointment) => (
-          <div key={appointment.id}> {/* Use appointment.id as key */}
+          <div key={appointment.id}>
             <p>Patient: {appointment.patientName}  {appointment.patientSurname}</p>
             <p>Reason: {appointment.reason}</p>
             <p>Date: {appointment.date}</p>
             <p>Time: {appointment.time}</p>
-            <button onClick={() => setCurrentDiagnosisAppointment(appointment.id)}>Add Diagnosis</button>
+            <button onClick={() => setCurrentDiagnosisAppointment(appointment.id)}>Add Diagnosis and Therapy</button>
 
             {currentDiagnosisAppointment === appointment.id && (
               <div>
-                <textarea value={diagnosisText} onChange={handleDiagnosisChange}></textarea>
-                <button onClick={() => handleSaveDiagnosis(appointment.id)}>Save Diagnosis</button>
+                <textarea value={diagnosisText} onChange={handleDiagnosisChange} placeholder="Enter diagnosis..."></textarea>
+                <textarea value={therapyText} onChange={handleTherapyChange} placeholder="Enter therapy..."></textarea>  {/* Input for therapy */}
+                <button onClick={() => handleSaveDiagnosisAndTherapy(appointment.id)}>Save Diagnosis and Therapy</button>
               </div>
             )}
           </div>
-))}
+        ))}
 
       </div>
     </div>
