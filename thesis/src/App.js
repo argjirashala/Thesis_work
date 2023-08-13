@@ -6,7 +6,9 @@ import RegisterPage from './RegisterPage';
 import RegisterDoc from './RegisterDoc';
 import PatientPage from './indexPatient'; // Assuming you have your components in the same directory
 import DoctorPage from './indexDoctor';
-
+import AdminPage from './indexAdmin';
+import EditDoctor from './EditDoctor';
+import EditPatient from './EditPatient';
 
 
 function App() {
@@ -19,6 +21,9 @@ function App() {
         <Route path="/registerdoc" element={<RegisterDoc />} />
         <Route path="/indexPatient/:userId" element={<PatientPage/>} />
         <Route path="/indexDoctor/:userId" element={<DoctorPage/>}/>
+        <Route path="/indexAdmin" element={<AdminPage/>}/>
+        <Route path="/EditDoctor/:id" element={<EditDoctor/>}/>
+        <Route path='/EditPatient/:id' element={<EditPatient/>}/>
       </Routes>
     </Router>
   );

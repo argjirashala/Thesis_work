@@ -33,7 +33,10 @@ const handleSubmit = async (e) => {
     const querySnapshot = await getDocs(q);
     
     // If no docs were found, querySnapshot will be empty
-    if ((!querySnapshot.empty && isDoctor) || (querySnapshot.empty && !isDoctor)) {
+    if (userCredential.user.email === 'admin@admin.com') {
+      navigate('/indexAdmin');
+    }
+    else if ((!querySnapshot.empty && isDoctor) || (querySnapshot.empty && !isDoctor)) {
       const userId = userCredential.user.uid;
       navigate(isDoctor ? `/indexDoctor/${userId}` : `/indexPatient/${userId}`);
     } else {
