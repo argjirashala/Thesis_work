@@ -9,6 +9,7 @@ import DoctorPage from './indexDoctor';
 import AdminPage from './indexAdmin';
 import EditDoctor from './EditDoctor';
 import EditPatient from './EditPatient';
+import Logout from './Logout';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/logout" element={<Logout />} />
         <Route path="/test" element={<FirebaseTest />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/registerdoc" element={<RegisterDoc />} />

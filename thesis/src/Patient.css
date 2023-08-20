@@ -1,0 +1,162 @@
+/* Overall Layout */
+body {
+    font-family: Arial, sans-serif;
+    /* background-color: #f4f4f4;  */
+    background-color: #0A2558;
+}
+
+div {
+    box-sizing: border-box;
+}
+
+/* Select dropdown styling */
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 15px 0;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* Doctor List */
+div.key {
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Styling */
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #007BFF;
+    color: #fff;
+}
+
+/* Modal Styling */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.modal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+/* Booked Appointments Styling */
+.booked-appointments {
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+.booked-appointments {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .appointments-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  .appointment-card {
+    width: 250px; /* adjust this width to whatever you prefer */
+    margin: 15px;
+    padding: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .appointment-card p {
+    margin: 5px 0;
+  }
+  
+  .appointment-card button {
+    margin-top: 10px;
+  }
+
+  .doctors-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows the doctor cards to wrap to the next row if they don't fit on one line */
+    justify-content: space-around; /* Evenly spaces out the doctor cards on the row */
+  }
+  
+  .doctor-card {
+    width: 250px; /* You can adjust this as per your design preferences */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .doctor-card p {
+    margin: 5px 0;
+  }
+  
+  .appointment-card-doc {
+    width: 350px; /* adjust this width to whatever you prefer */
+    margin: 15px;
+    padding: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  

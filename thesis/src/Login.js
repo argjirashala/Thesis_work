@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword,sendPasswordResetEmail } from 'firebase/auth';
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
-
+import './Login.css';
 
 
 
@@ -40,38 +40,67 @@ const handleSubmit = async (e) => {
       const userId = userCredential.user.uid;
       navigate(isDoctor ? `/indexDoctor/${userId}` : `/indexPatient/${userId}`);
     } else {
-      setError('Invalid role selection!');
+      alert('Invalid role selection!');
     }
   } catch (error) {
-    setError('Invalid email or password!');
+    alert('Invalid email or password!');
   }        
 };
 
+const handleForgotPassword = async () => {
+  const email = formData.email;
+
+  if (!email) {
+    alert('Please enter your email to reset password.');
+    return;
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert('Password reset email sent! Check your inbox.');
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    setError('Error sending password reset email. Please try again.');
+  }
+};
   
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
+    <div className='login-wrapper'>
+      <div className='parent-container'>
+      <div className='login-form'>
+      {/* <h1>Login</h1> */}
+      <form className='mainForm' onSubmit={handleSubmit}>
+      <div className='login forms form-style'>
         <label>
           Are you a doctor?
           <input type="checkbox" checked={isDoctor} onChange={(e) => setIsDoctor(e.target.checked)} />
         </label>
         <br />
+        <br></br>
         <label>
           Email:
-          <input type="text" name="email" onChange={handleChange} required />
+          <input type="text" name="email" onChange={handleChange} required className='input input-field' />
         </label>
         <br />
         <label>
           Password:
-          <input type="password" name="password" onChange={handleChange} required />
+          <input type="password" name="password" onChange={handleChange} required className='input input-field'/>
         </label>
         <br />
-        <button type="submit">Login</button>
+        <button type="submit" className='input submit'>Login</button>
+        <br/>
+        <button type="button" onClick={handleForgotPassword} className='input forgot-password'>Forgot Password?</button>
+        </div> 
       </form>
       {error && <div className="error">{error}</div>}
-      <button onClick={() => navigate(isDoctor ? '/registerdoc' : '/register')}>Register</button>    </div>
+      <div className='register-box'>
+      <p>Please register in case you haven't done so. Don't forget to check the box if you're a doctor!</p>
+      <button type="button" className='register-button' onClick={() => navigate(isDoctor ? '/registerdoc' : '/register')} >Register</button>
+      </div>
+      </div>   
+       </div>
+       </div>
   );
 }
 

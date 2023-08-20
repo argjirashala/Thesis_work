@@ -1,14 +1,16 @@
 import React, { useState, useEffect} from 'react';
 import { useParams } from "react-router-dom";
 import { getFirestore, collection, query, where, getDocs, doc,addDoc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
-
+import './Patient.css';
+import Modal from './Modal';
+import LogoutButton from './LogoutButton'
 function PatientPage() {
   const { userId } = useParams();
   const [doctors, setDoctors] = useState([]);
   const [specialization, setSpecialization] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [availableSlots, setAvailableSlots] = useState([]);
+  const [availableSlots, setAvailableSlots] = useState([]); 
   const [appointment, setAppointment] = useState({
     reason: "",
     date: "",
@@ -19,6 +21,7 @@ function PatientPage() {
   const [availableDates, setAvailableDates] = useState([]);
   const [bookedAppointments, setBookedAppointments] = useState([]);
   const [appointmentToShow, setAppointmentToShow] = useState(null);
+  
 
 
 
@@ -148,10 +151,13 @@ useEffect(() => {
   
 
   return (
-    <div>
+    <div >
+      <h1 style={{color: "white"}}>Welcome!</h1>
+      <LogoutButton />
+      <div className="booked-appointments">
+        <h2>Book an appointment</h2>
       <select onChange={handleSelect}>
         <option value="">--Select Specialization--</option>
-        <option value="Pediatrician">Pediatrician</option>
         <option value="AerospaceMedicineSpecialist">Aerospace Medicine Specialist</option>
     <option value="Allergist">Allergist</option>
     <option value="Anaesthesiologist">Anaesthesiologist</option>
@@ -202,15 +208,17 @@ useEffect(() => {
     <option value="Veterinarian">Veterinarian</option>
       </select>
 
-      {doctors.map(doctor => (
-        <div key={doctor.personalID}>
-          <p>{doctor.name} {doctor.surname}</p>
-          <p>{doctor.email}</p>
-          <p>{doctor.clinic}</p>
-          <button onClick={() => handleBooking(doctor)}>Book Appointment</button>
-          {/* Add more fields as needed */}
-        </div>
-      ))}
+      <div className="doctors-container">
+  {doctors.map(doctor => (
+    <div key={doctor.personalID} className="doctor-card">
+      <p>{doctor.name} {doctor.surname}</p>
+      <p>{doctor.email}</p>
+      <p>{doctor.clinic}</p>
+      <button onClick={() => handleBooking(doctor)}>Book Appointment</button>
+    </div>
+  ))}
+</div>
+
       {selectedDoctor && (
     <div className="modal">
       <h2>Book Appointment with {selectedDoctor.name} {selectedDoctor.surname}</h2>
@@ -230,40 +238,35 @@ useEffect(() => {
       {availableSlots.map(slot => (
         <button key={slot} onClick={() => handleSlotSelection(slot)}>{slot}</button>
       ))}
+      <br></br>
+      <br></br>
       <button onClick={handleBookAppointment}>Confirm</button>
       <button onClick={handleClose}>Cancel</button>
     </div>
 )}
+</div>
 
 <div className="booked-appointments">
   <h2>Your Booked Appointments</h2>
-  {bookedAppointments.map(appointment => (
-  <div key={`${appointment.date}-${appointment.time}`}>
-    <p>Doctor: {appointment.doctorName} {appointment.doctorSurname}</p>
-    <p>Date: {appointment.date}</p>
-    <p>Time: {appointment.time}</p>
-    <p>Reason: {appointment.reason}</p>
-    {appointment.diagnosis && (
-      <>
-        <button onClick={() => setAppointmentToShow(appointment)}>Show Diagnosis and Therapy</button>
-        {appointmentToShow === appointment && (
+  <div className="appointments-row">
+    {bookedAppointments.map(appointment => (
+      <div key={`${appointment.date}-${appointment.time}`} className="appointment-card">
+        <p>Doctor: {appointment.doctorName} {appointment.doctorSurname}</p>
+        <p>Date: {appointment.date}</p>
+        <p>Time: {appointment.time}</p>
+        <p>Reason: {appointment.reason}</p>
+        {appointment.diagnosis && (
           <>
-            <p>Diagnosis: {appointment.diagnosis}</p>
-            <p>Therapy: {appointment.therapy}</p>
+            <button onClick={() => setAppointmentToShow(appointment)}>Show Diagnosis and Therapy</button>
+            <Modal isOpen={appointmentToShow === appointment} onClose={() => setAppointmentToShow(null)} appointment={appointment} />
           </>
         )}
-        {appointment.fileURL && (
-    <a href={appointment.fileURL} download>Download File</a>
-)}
-
-      </>
-    )}
+      </div>
+    ))}
   </div>
-))}
 </div>
 
-
-    </div>
+</div>
   );
 }
 

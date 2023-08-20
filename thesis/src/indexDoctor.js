@@ -4,6 +4,20 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useParams } from "react-router-dom";
 import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import './Modal.css';
+import LogoutButton from "./LogoutButton";
+function Modal({ isOpen, onClose, children }) {
+  if (!isOpen) return null;
+  
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <button className="close-btn" onClick={onClose}>Close</button>
+        {children}
+      </div>
+    </div>
+  );
+}
 
 function DoctorPage() {
   const { userId } = useParams();
@@ -19,6 +33,7 @@ function DoctorPage() {
   const [currentDetailsAppointment, setCurrentDetailsAppointment] = useState(null);
   const [modifyAppointment, setModifyAppointment] = useState(null);
   const [uploadingFile, setUploadingFile] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
   useEffect(() => {
@@ -62,11 +77,14 @@ function DoctorPage() {
 
 const togglePatientAppointments = (patientId) => {
   if (currentPatientAppointments === patientId) {
-    setCurrentPatientAppointments(null);  // If already expanded, collapse
+    setCurrentPatientAppointments(null);
+    setIsModalOpen(false);  // Close the modal
   } else {
-    setCurrentPatientAppointments(patientId); // Else expand
+    setCurrentPatientAppointments(patientId);
+    setIsModalOpen(true);  // Open the modal
   }
 };
+
 
 
 
@@ -165,7 +183,9 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
 
  return (
   <div>
-    <h1>Welcome, Dr. {doctorDetails?.name}</h1>
+    <h1 style={{color: "white"}}>Welcome, Dr. {doctorDetails?.name}</h1>
+    <LogoutButton />
+    <div className="booked-appointments">
     <h3>Set Your Availability</h3>
     <DatePicker selected={selectedDate} onChange={handleDateChange} />
     <label>
@@ -178,7 +198,9 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
       />
     </label>
     <button onClick={handleSaveAvailability}>Save Availability</button>
-    <div>
+    </div>
+    <div className="booked-appointments">
+    
       <h2>Your Booked Appointments</h2>
       
       {[...new Set(sortedAppointments.map(app => app.patientId))].map(patientId => {
@@ -186,14 +208,19 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
         const firstAppointment = patientAppointments[0];
         
         return (
-          <div key={patientId}>
+          <div key={patientId} >
+            <div className="appointments-row">
             <p>Patient: {firstAppointment.patientName} {firstAppointment.patientSurname}</p>
             <button onClick={() => togglePatientAppointments(patientId)}>Appointments</button>
-
+            </div>
+            
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
             {currentPatientAppointments === patientId && (
               <div>
                 {patientAppointments.map(appointment => (
-                  <div key={appointment.id}>
+                  <>
+                  
+                  <div key={appointment.id} className="appointment-card-doc">
                     {/* Display appointment details */}
                     Patient's name: {appointment.patientName}
                     <br />
@@ -203,9 +230,9 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
                     <br />
                     Time: {appointment.time}
                     <br />
-                    
+
                     {appointment.diagnosis && appointment.therapy ? (
-                      <div>
+                      <><div>
                         <button onClick={() => setCurrentDetailsAppointment(appointment.id)}>Details</button>
                         <button onClick={() => setModifyAppointment(appointment.id)}>Modify</button>
 
@@ -223,18 +250,19 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
                             <button onClick={() => {
                               handleSaveDiagnosisAndTherapy(appointment.id);
                               setModifyAppointment(null);
-                            }}>Save Changes</button>
+                            } }>Save Changes</button>
                           </div>
                         )}
-                      </div>
+                      </div><br></br></>
                     ) : (
-                      <button onClick={() => setCurrentDiagnosisAppointment(appointment.id)}>Add Diagnosis and Therapy</button>
-                      
+                      <><br></br><button onClick={() => setCurrentDiagnosisAppointment(appointment.id)}>Add Diagnosis and Therapy</button></>
+
                     )}
+                    <br></br>
                     <input type="file" onChange={handleFileChange} />
-<button onClick={() => {
-    handleFileUpload(uploadingFile, appointment.id);
-}}>Upload File</button>
+                    <button onClick={() => {
+                      handleFileUpload(uploadingFile, appointment.id);
+                    } }>Upload File</button>
 
 
                     {currentDiagnosisAppointment === appointment.id && (
@@ -244,14 +272,17 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
                         <button onClick={() => {
                           handleSaveDiagnosisAndTherapy(appointment.id);
                           setCurrentDiagnosisAppointment(null);
-                        }}>Save Diagnosis and Therapy</button>
+                        } }>Save Diagnosis and Therapy</button>
                       </div>
                     )}
-                  </div>
+                  </div><br></br></>
                 ))}
+                <hr></hr>
               </div>
             )}
+            </Modal>
           </div>
+          
         );
       })}
     </div>
