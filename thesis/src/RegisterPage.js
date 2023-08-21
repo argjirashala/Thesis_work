@@ -3,6 +3,9 @@ import { addDoc, setDoc, doc, collection, getDocs, query, where } from 'firebase
 import { db } from './firebase';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import './Register.css';
+import { useNavigate } from "react-router-dom";
+
+
 
 
 function RegisterPage() {
@@ -21,6 +24,7 @@ function RegisterPage() {
   });
 
   const [errors, setErrors] = useState([]);
+  let navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -92,6 +96,7 @@ function RegisterPage() {
       
 
       alert(["Registration was successful!"]);
+      navigate("/");
     } catch (error) {
       setErrors([`Error adding document: ${error}`]);
     }

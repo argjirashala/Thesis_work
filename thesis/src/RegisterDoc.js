@@ -3,6 +3,7 @@ import { addDoc,doc, setDoc, collection, getDocs, query, where } from 'firebase/
 import { db } from './firebase';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import './Register.css';
+import { useNavigate } from "react-router-dom";
 
 function RegisterDoc() {
   const auth = getAuth(); // initialize authv
@@ -22,6 +23,7 @@ function RegisterDoc() {
   });
 
   const [errors, setErrors] = useState([]);
+  let navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -89,6 +91,8 @@ function RegisterDoc() {
       await setDoc(docRef, formData);
 
       alert(["Registration was successful!"]);
+      navigate("/");
+      
     } catch (error) {
       setErrors([`Error adding document: ${error}`]);
     }

@@ -96,7 +96,7 @@ function EditPatient() {
         const patientRef = doc(db, "patients", id);
         await updateDoc(patientRef, formData);
   
-        setErrors(["Update was successful!"]);
+        alert(["Update was successful!"]);
       } catch (error) {
         setErrors([`Error updating document: ${error}`]);
       }
@@ -104,33 +104,34 @@ function EditPatient() {
   
 
   return (
-    <div>
-      <h1>Edit Patient</h1>
+    <div className='register-wrapper'>
+    <div className='parent-container'>
+    <div className='register-form'>
       <form onSubmit={handleSubmit}>
         {/* Rest of your form fields */}
         <label>
           Personal ID:
-          <input type="text" name="personalID" onChange={handleChange} />
+          <input type="text" name="personalID" onChange={handleChange} required className='input input-field' value={formData.personalID}/>
         </label>
         <br></br>
         <label>
           Name:
-          <input type="text" name="name" onChange={handleChange} />
+          <input type="text" name="name" onChange={handleChange} required className='input input-field' value={formData.name}/>
         </label>
         <br></br>
         <label>
           Surname:
-          <input type="text" name="surname" onChange={handleChange} />
+          <input type="text" name="surname" onChange={handleChange} required className='input input-field' value={formData.surname} />
         </label>
         <br></br>
         <label>
           Birthday:
-          <input type="date" name="birthday" onChange={handleChange} />
+          <input type="date" name="birthday" onChange={handleChange} required className='input input-field' value={formData.birthday} />
         </label>
         <br></br>
         <label>
   Gender:
-  <select name="gender" onChange={handleChange}>
+  <select name="gender" onChange={handleChange} required className='input input-field' value={formData.gender}>
     <option value="">Select...</option>
     <option value="male">Male</option>
     <option value="female">Female</option>
@@ -140,41 +141,42 @@ function EditPatient() {
 <br></br>
         <label>
           Address:
-          <input type="text" name="address" onChange={handleChange} />
+          <input type="text" name="address" onChange={handleChange} required className='input input-field' value={formData.address} />
         </label>
         <br></br>
         <label>
           Phone:
-          <input type="number" name="phone" onChange={handleChange} />
+          <input type="number" name="phone" onChange={handleChange} required className='input input-field' value={formData.phone}/>
         </label>
         <br></br>
         <label>
           Email:
-          <input type="text" name="email" onChange={handleChange} />
+          <input type="text" name="email" onChange={handleChange} required className='input input-field' value={formData.email} />
         </label>
         <br></br>
         <label>
           Password:
-          <input type="password" name="password" onChange={handleChange} />
+          <input type="password" name="password" onChange={handleChange} required className='input input-field' value={formData.password}/>
         </label>
         <br></br>
         <label>
           Confirm Password:
-          <input type="password" name="confirmPassword" onChange={handleChange} />
+          <input type="password" name="confirmPassword" onChange={handleChange} required className='input input-field' value={formData.password}/>
         </label>
         <br></br>
         <br></br>
         {/* ... */}
-        <button type="submit">Edit</button>
+        <button type="submit" className='input submit'>Edit</button>
         <br></br>
         <br></br>
         {errors.length > 0 && (
-          <div style={{backgroundColor: 'pink', width: '400px', height: '200px'}}>
+          <div style={{backgroundColor: 'pink', width: '400px', height: '100px'}}>
           {errors.map((error, index) => <li key={index}>{error}</li>)}
         </div>
         )}
       </form>
     </div>
+    </div></div>
   );
 }
 

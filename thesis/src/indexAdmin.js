@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getFirestore, doc, setDoc, collection,  getDocs } from "firebase/firestore";
 import { Link } from 'react-router-dom';
+import LogoutButton from "./LogoutButton";
 
 
 function AdminPage() {
@@ -44,63 +45,68 @@ function AdminPage() {
 
 
 return(
-  <div>
-  <h2>Doctors</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Surname</th>
-        <th>Email</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {doctors.map(doctor => (
-        <tr key={doctor.id}>
-          <td>{doctor.name}</td>
-          <td>{doctor.surname}</td>
-          <td>{doctor.email}</td>
-          <td>
-            {/* <button onClick={() => editUser('doctors', doctor.id)}>Edit</button> */}
-            <button>
-  <Link to={`/editDoctor/${doctor.id}`}>Edit</Link>
-</button>
-            <button onClick={() => deleteUser('doctors', doctor.id)}>Delete</button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
+  <><LogoutButton /><div>
+    <div className="booked-appointments">
+      <h2>Doctors</h2>
 
-  {/* Similar table for patients... */}
-  <h2>Patients</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Surname</th>
-        <th>Email</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {patients.map(patient => (
-        <tr key={patient.id}>
-          <td>{patient.name}</td>
-          <td>{patient.surname}</td>
-          <td>{patient.email}</td>
-          <td>
-          <button>
-  <Link to={`/editPatient/${patient.id}`}>Edit</Link>
-</button>
-            <button onClick={() => deleteUser('patients', patient.id)}>Delete</button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {doctors.map(doctor => (
+            <tr key={doctor.id}>
+              <td>{doctor.name}</td>
+              <td>{doctor.surname}</td>
+              <td>{doctor.email}</td>
+              <td>
+                {/* <button onClick={() => editUser('doctors', doctor.id)}>Edit</button> */}
+                <button>
+                  <Link to={`/editDoctor/${doctor.id}`}>Edit</Link>
+                </button>
+                <button onClick={() => deleteUser('doctors', doctor.id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <div className="booked-appointments">
+
+      {/* Similar table for patients... */}
+      <h2>Patients</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {patients.map(patient => (
+            <tr key={patient.id}>
+              <td>{patient.name}</td>
+              <td>{patient.surname}</td>
+              <td>{patient.email}</td>
+              <td>
+                <button>
+                  <Link to={`/editPatient/${patient.id}`}>Edit</Link>
+                </button>
+                <button onClick={() => deleteUser('patients', patient.id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div></>
 )
 
   
