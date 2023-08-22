@@ -6,6 +6,7 @@ import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } 
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import './Modal.css';
 import LogoutButton from "./LogoutButton";
+import { useNavigate } from "react-router-dom";
 function Modal({ isOpen, onClose, children }) {
   if (!isOpen) return null;
   
@@ -34,6 +35,7 @@ function DoctorPage() {
   const [modifyAppointment, setModifyAppointment] = useState(null);
   const [uploadingFile, setUploadingFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  let navigate = useNavigate();
 
 
   useEffect(() => {
@@ -84,6 +86,14 @@ const togglePatientAppointments = (patientId) => {
     setIsModalOpen(true);  // Open the modal
   }
 };
+
+// const togglePatientAppointments = (patientId) => {
+//   if (currentPatientAppointments === patientId) {
+//     setCurrentPatientAppointments(null);
+//   } else {
+//     setCurrentPatientAppointments(patientId);
+//   }
+// };
 
 
 
@@ -185,7 +195,11 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
   <div>
     <h1 style={{color: "white"}}>Welcome, Dr. {doctorDetails?.name}</h1>
     <LogoutButton />
+    <br></br>
+    <br></br>
+    <button onClick={() => navigate('/register')}>Register Patient</button>
     <div className="booked-appointments">
+      
     <h3>Set Your Availability</h3>
     <DatePicker selected={selectedDate} onChange={handleDateChange} />
     <label>
@@ -199,9 +213,12 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
     </label>
     <button onClick={handleSaveAvailability}>Save Availability</button>
     </div>
-    <div className="booked-appointments">
     
-      <h2>Your Booked Appointments</h2>
+    <div className="booked-appointments">
+    <h2>Your Booked Appointments</h2>
+    {/* <div className="appointments-row"> */}
+    
+      
       
       {[...new Set(sortedAppointments.map(app => app.patientId))].map(patientId => {
         const patientAppointments = sortedAppointments.filter(app => app.patientId === patientId);
@@ -209,12 +226,14 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
         
         return (
           <div key={patientId} >
-            <div className="appointments-row">
+            {/* <div  className="appointment-card-doc"> */}
             <p>Patient: {firstAppointment.patientName} {firstAppointment.patientSurname}</p>
             <button onClick={() => togglePatientAppointments(patientId)}>Appointments</button>
-            </div>
+            {/* </div> */}
+            
             
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      
             {currentPatientAppointments === patientId && (
               <div>
                 {patientAppointments.map(appointment => (
@@ -286,7 +305,8 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
         );
       })}
     </div>
-  </div>
+    </div>
+  // </div>
 );
 
 }
