@@ -11,8 +11,10 @@ function Modal({ isOpen, onClose, children }) {
   if (!isOpen) return null;
   
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    // <div className="modal-overlay">
+    <div>
+      {/* // <div className="modal-content"> */}
+      <div>
         <button className="close-btn" onClick={onClose}>Close</button>
         {children}
       </div>
@@ -216,7 +218,7 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
     
     <div className="booked-appointments">
     <h2>Your Booked Appointments</h2>
-    {/* <div className="appointments-row"> */}
+    <div className="appointments-row">
     
       
       
@@ -226,10 +228,10 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
         
         return (
           <div key={patientId} >
-            {/* <div  className="appointment-card-doc"> */}
+            <div  className="appointment-card-doc">
             <p>Patient: {firstAppointment.patientName} {firstAppointment.patientSurname}</p>
             <button onClick={() => togglePatientAppointments(patientId)}>Appointments</button>
-            {/* </div> */}
+            </div>
             
             
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -306,7 +308,7 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
       })}
     </div>
     </div>
-  // </div>
+  </div>
 );
 
 }

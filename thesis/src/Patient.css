@@ -43,7 +43,7 @@ button:hover {
 }
 
 /* Modal Styling */
-.modal {
+/* .modal {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -65,7 +65,7 @@ button:hover {
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
-}
+} */
 
 label {
     display: block;
