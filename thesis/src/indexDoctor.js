@@ -234,10 +234,12 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
             </div>
             
             
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            {/* <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}> */}
+            {/* <div className="modal"> */}
       
             {currentPatientAppointments === patientId && (
-              <div>
+              <div className="modal">
+                <button className="close-btn" onClick={() => setCurrentPatientAppointments(null)}>&times;</button>
                 {patientAppointments.map(appointment => (
                   <>
                   
@@ -301,8 +303,9 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
                 <hr></hr>
               </div>
             )}
-            </Modal>
-          </div>
+            {/* </Modal> */}
+            </div>
+          // </div>
           
         );
       })}
