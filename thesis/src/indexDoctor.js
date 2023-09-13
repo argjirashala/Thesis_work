@@ -7,6 +7,7 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/
 import './Modal.css';
 import LogoutButton from "./LogoutButton";
 import { useNavigate } from "react-router-dom";
+import { sendPasswordResetEmail, getAuth } from "firebase/auth";
 function Modal({ isOpen, onClose, children }) {
   if (!isOpen) return null;
   
@@ -37,7 +38,20 @@ function DoctorPage() {
   const [modifyAppointment, setModifyAppointment] = useState(null);
   const [uploadingFile, setUploadingFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [detailsVisible, setDetailsVisible] = useState(false);
   let navigate = useNavigate();
+
+  const handleChangePassword = () => {
+    const auth = getAuth();
+    sendPasswordResetEmail(auth, doctorDetails.email)
+      .then(() => {
+        alert('Password reset link sent to your email.');
+      })
+      .catch((error) => {
+        console.error('Error sending password reset email:', error);
+        alert('Error sending password reset email. Please try again.');
+      });
+  };
 
 
   useEffect(() => {
@@ -200,6 +214,22 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
     <br></br>
     <br></br>
     <button onClick={() => navigate('/register')}>Register Patient</button>
+    <button onClick={() => setDetailsVisible(!detailsVisible)}>
+  {detailsVisible ? "Hide Details" : "Show Details"}
+</button>
+
+{detailsVisible && (
+  <div className="appointment-card">
+    <div className={`details-section ${detailsVisible ? "show" : ""}`}>
+    <h2>Your Details</h2>
+    <p>Name: {doctorDetails.name}</p>
+    <p>Surname: {doctorDetails.surname}</p>
+    <p>Email: {doctorDetails.email}</p>
+    <button onClick={handleChangePassword}>Change Password</button>
+  </div>
+  </div>
+  
+)}
     <div className="booked-appointments">
       
     <h3>Set Your Availability</h3>

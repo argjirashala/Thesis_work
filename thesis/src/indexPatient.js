@@ -4,7 +4,10 @@ import { getFirestore, collection, query, where, getDocs, doc,addDoc, setDoc, ge
 import './Patient.css';
 import Modal from './Modal';
 import LogoutButton from './LogoutButton'
-function PatientPage() {
+import { sendPasswordResetEmail, getAuth } from "firebase/auth";
+
+
+function PatientPage() { 
   const { userId } = useParams();
   const [doctors, setDoctors] = useState([]);
   const [specialization, setSpecialization] = useState("");
@@ -21,6 +24,36 @@ function PatientPage() {
   const [availableDates, setAvailableDates] = useState([]);
   const [bookedAppointments, setBookedAppointments] = useState([]);
   const [appointmentToShow, setAppointmentToShow] = useState(null);
+  const [patientDetails, setPatientDetails] = useState({});
+  const [detailsVisible, setDetailsVisible] = useState(false);
+
+  
+
+const handleChangePassword = () => {
+  const auth = getAuth();
+  sendPasswordResetEmail(auth, patientDetails.email)
+    .then(() => {
+      alert('Password reset link sent to your email.');
+    })
+    .catch((error) => {
+      console.error('Error sending password reset email:', error);
+      alert('Error sending password reset email. Please try again.');
+    });
+};
+
+
+useEffect(() => {
+  const fetchPatientDetails = async () => {
+    const docRef = doc(db, "patients", userId);
+    const patientDoc = await getDoc(docRef);
+    if (patientDoc.exists()) {
+      setPatientDetails(patientDoc.data());
+    }
+  };
+  
+  fetchPatientDetails();
+}, [userId]);
+
   
 
 
@@ -154,6 +187,24 @@ useEffect(() => {
     <div >
       <h1 style={{color: "white"}}>Welcome!</h1>
       <LogoutButton />
+      <button onClick={() => setDetailsVisible(!detailsVisible)}>
+  {detailsVisible ? "Hide Details" : "Show Details"}
+</button>
+
+{detailsVisible && (
+  <div className="appointment-card">
+    <div className={`details-section ${detailsVisible ? "show" : ""}`}>
+    <h2>Your Details</h2>
+    <p>Name: {patientDetails.name}</p>
+    <p>Surname: {patientDetails.surname}</p>
+    <p>Email: {patientDetails.email}</p>
+    <button onClick={handleChangePassword}>Change Password</button>
+  </div>n
+  </div>
+  
+)}
+
+
       <div className="booked-appointments">
         <h2>Book an appointment</h2>
       <select onChange={handleSelect}>
