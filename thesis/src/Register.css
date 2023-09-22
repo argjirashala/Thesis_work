@@ -10,7 +10,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     overflow-y: auto;
-    max-height: 90vh; /* Set a max-height */
+    max-height: 90vh; 
 }
 
 .mainForm .input-field {

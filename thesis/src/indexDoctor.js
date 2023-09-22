@@ -8,20 +8,18 @@ import './Modal.css';
 import LogoutButton from "./LogoutButton";
 import { useNavigate } from "react-router-dom";
 import { sendPasswordResetEmail, getAuth } from "firebase/auth";
-function Modal({ isOpen, onClose, children }) {
-  if (!isOpen) return null;
+// function Modal({ isOpen, onClose, children }) {
+//   if (!isOpen) return null;
   
-  return (
-    // <div className="modal-overlay">
-    <div>
-      {/* // <div className="modal-content"> */}
-      <div>
-        <button className="close-btn" onClick={onClose}>Close</button>
-        {children}
-      </div>
-    </div>
-  );
-}
+//   return (
+//     <div>
+//       <div>
+//         <button className="close-btn" onClick={onClose}>Close</button>
+//         {children}
+//       </div>
+//     </div>
+//   );
+// }
 
 function DoctorPage() {
   const { userId } = useParams();
@@ -96,20 +94,12 @@ function DoctorPage() {
 const togglePatientAppointments = (patientId) => {
   if (currentPatientAppointments === patientId) {
     setCurrentPatientAppointments(null);
-    setIsModalOpen(false);  // Close the modal
+    setIsModalOpen(false);  
   } else {
     setCurrentPatientAppointments(patientId);
-    setIsModalOpen(true);  // Open the modal
+    setIsModalOpen(true); 
   }
 };
-
-// const togglePatientAppointments = (patientId) => {
-//   if (currentPatientAppointments === patientId) {
-//     setCurrentPatientAppointments(null);
-//   } else {
-//     setCurrentPatientAppointments(patientId);
-//   }
-// };
 
 
 
@@ -140,14 +130,13 @@ const togglePatientAppointments = (patientId) => {
     setDiagnosisText(e.target.value);
   };
 
-  const handleTherapyChange = (e) => {   // Handle therapy change
+  const handleTherapyChange = (e) => { 
     setTherapyText(e.target.value);
   };
 
   const handleSaveDiagnosisAndTherapy = async (appointmentId) => {
     const appointmentRef = doc(db, "appointments", appointmentId);
     await setDoc(appointmentRef, { diagnosis: diagnosisText, therapy: therapyText }, { merge: true }); // Save both diagnosis and therapy
-    // Reset states after saving
     setCurrentDiagnosisAppointment(null);
     setDiagnosisText('');
     setTherapyText('');
@@ -192,19 +181,17 @@ const handleFileChange = (e) => {
 
 
 
-  // Sorting the booked appointments
 const sortedAppointments = bookedAppointments.sort((a, b) => {
-  const dateA = new Date(a.date);  // Assuming `date` is the field name in your appointment object
+  const dateA = new Date(a.date);  
   const dateB = new Date(b.date);
 
-  // Current or future dates first, past dates later
   if (dateA < new Date() && dateB >= new Date()) {
     return 1;
   }
   if (dateA >= new Date() && dateB < new Date()) {
     return -1;
   }
-  return dateA - dateB;  // Otherwise, sort by date ascending
+  return dateA - dateB;  
 });
 
  return (
@@ -264,8 +251,7 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
             </div>
             
             
-            {/* <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}> */}
-            {/* <div className="modal"> */}
+            
       
             {currentPatientAppointments === patientId && (
               <div className="modal">
@@ -274,7 +260,6 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
                   <>
                   
                   <div key={appointment.id} className="appointment-card-doc">
-                    {/* Display appointment details */}
                     Patient's name: {appointment.patientName}
                     <br />
                     Patient's surname: {appointment.patientSurname}
@@ -333,9 +318,7 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
                 <hr></hr>
               </div>
             )}
-            {/* </Modal> */}
             </div>
-          // </div>
           
         );
       })}

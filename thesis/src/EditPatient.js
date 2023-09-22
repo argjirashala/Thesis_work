@@ -22,7 +22,6 @@ function EditPatient() {
   const [errors, setErrors] = useState([]);
   const db = getFirestore();
 
-  // Fetch doctor's data when component loads
   useEffect(() => {
     const fetchPatient = async () => {
       const patientRef = doc(db, "patients", id);
@@ -41,7 +40,7 @@ function EditPatient() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setErrors([]); // Clear errors when field value changes
+    setErrors([]); 
   };
 
   const handleSubmit = async (e) => {
@@ -52,27 +51,25 @@ function EditPatient() {
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
     const namePattern = /^[a-zA-Z]+$/;
 
-    // Check if all fields are filled
+    
     if (Object.values(formData).some(value => value === "")) {
       newErrors.push("All fields must be filled!");
     }
 
-    // Check if names only contain letters
+  
     if (!(namePattern.test(formData.name) && namePattern.test(formData.surname))) {
       newErrors.push("Name and surname should only contain letters");
     }
 
-    // Check if passwords match
+   
     if (formData.password !== formData.confirmPassword) {
       newErrors.push("Passwords do not match!");
     }
 
-    // Check if password length is between 8 and 20 characters, contains at least one number and rest can be letters
     if (!passwordPattern.test(formData.password)) {
       newErrors.push("Password should be between 8 and 20 characters, contain at least one number, and the rest can be letters.");
     }
 
-    // Check if email is valid
     if (!emailPattern.test(formData.email)) {
       newErrors.push("Invalid email format.");
     }
@@ -82,7 +79,6 @@ function EditPatient() {
       return;
     }
 
-    // Query firestore for uniqueness of personalID, email and username
     const personalIDExists = await (await getDocs(query(collection(db, "patients"), where("personalID", "==", formData.personalID), where("__name__", "!=", id)))).size > 0;
     const emailExists = await (await getDocs(query(collection(db, "patients"), where("email", "==", formData.email), where("__name__", "!=", id)))).size > 0;
     
@@ -92,7 +88,6 @@ function EditPatient() {
         }
 
     try {
-      // create an authentication account for the user with Firebase Authentication
         const patientRef = doc(db, "patients", id);
         await updateDoc(patientRef, formData);
   
@@ -108,7 +103,6 @@ function EditPatient() {
     <div className='parent-container'>
     <div className='register-form'>
       <form onSubmit={handleSubmit}>
-        {/* Rest of your form fields */}
         <label>
           Personal ID:
           <input type="text" name="personalID" onChange={handleChange} required className='input input-field' value={formData.personalID}/>

@@ -5,7 +5,7 @@ import { query, where } from 'firebase/firestore';
 
 
 function EditDoctor() {
-  const { id } = useParams(); // Get the doctor's ID from the URL
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     personalID: '',
     name: '',
@@ -23,8 +23,6 @@ function EditDoctor() {
   const [errors, setErrors] = useState([]);
   const db = getFirestore();
   
-
-  // Fetch doctor's data when component loads
   useEffect(() => {
     const fetchDoctor = async () => {
       const docRef = doc(db, "doctors", id);
@@ -43,11 +41,10 @@ function EditDoctor() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setErrors([]); // Clear errors when field value changes
+    setErrors([]); 
   };
 
-  // Rest of the component remains largely the same as RegisterDoc.
-  // However, instead of setDoc, use updateDoc on handleSubmit.
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,27 +54,25 @@ function EditDoctor() {
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
     const namePattern = /^[a-zA-Z]+$/;
 
-    // Check if all fields are filled
+  
     if (Object.values(formData).some(value => value === "")) {
       newErrors.push("All fields must be filled!");
     }
 
-    // Check if names only contain letters
+    
     if (!(namePattern.test(formData.name) && namePattern.test(formData.surname))) {
       newErrors.push("Name and surname should only contain letters");
     }
 
-    // Check if passwords match
+ 
     if (formData.password !== formData.confirmPassword) {
       newErrors.push("Passwords do not match!");
     }
 
-    // Check if password length is between 8 and 20 characters, contains at least one number and rest can be letters
     if (!passwordPattern.test(formData.password)) {
       newErrors.push("Password should be between 8 and 20 characters and contain at least one number.");
     }
 
-    // Check if email is valid
     if (!emailPattern.test(formData.email)) {
       newErrors.push("Invalid email format.");
     }
@@ -87,8 +82,7 @@ function EditDoctor() {
       return;
     }
 
-    // Query firestore for uniqueness of personalID, email and username
-    // Query firestore for uniqueness of personalID, email and username
+
 const personalIDExists = await (await getDocs(query(collection(db, "doctors"), where("personalID", "==", formData.personalID), where("__name__", "!=", id)))).size > 0;
 const emailExists = await (await getDocs(query(collection(db, "doctors"), where("email", "==", formData.email), where("__name__", "!=", id)))).size > 0;
 
@@ -96,8 +90,6 @@ const emailExists = await (await getDocs(query(collection(db, "doctors"), where(
       setErrors(["User already exist!"]);
       return;
     }
-
-    // ... your validation logic
 
     try {
       const docRef = doc(db, "doctors", id);
@@ -114,7 +106,6 @@ const emailExists = await (await getDocs(query(collection(db, "doctors"), where(
       <div className='parent-container'>
       <div className='register-form'>
       <form onSubmit={handleSubmit} className='mainForm'>
-        {/* Rest of your form fields */}
         <label>
           Personal ID:
           <input type="text" name="personalID" onChange={handleChange} required className='input input-field' value={formData.personalID}/>
@@ -244,7 +235,6 @@ const emailExists = await (await getDocs(query(collection(db, "doctors"), where(
     </div>
     </div>
     </div>
-    // ... your render logic, which should be very similar to RegisterDoc
   );
 }
 

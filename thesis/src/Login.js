@@ -7,7 +7,7 @@ import './Login.css';
 
 
 function LoginPage() {
-  const auth = getAuth(); // initialize auth
+  const auth = getAuth(); 
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isDoctor, setIsDoctor] = useState(false);
   const [error, setError] = useState(null);
@@ -27,12 +27,10 @@ const handleSubmit = async (e) => {
     const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
     const db = getFirestore();
 
-    // Create a query against the collection
     const q = query(collection(db, "doctors"), where("email", "==", formData.email));
 
     const querySnapshot = await getDocs(q);
     
-    // If no docs were found, querySnapshot will be empty
     if (userCredential.user.email === 'admin@admin.com') {
       navigate('/indexAdmin');
     }
@@ -69,7 +67,6 @@ const handleForgotPassword = async () => {
     <div className='login-wrapper'>
       <div className='parent-container'>
       <div className='login-form'>
-      {/* <h1>Login</h1> */}
       <form className='mainForm' onSubmit={handleSubmit}>
       <div className='login forms form-style'>
         <label>

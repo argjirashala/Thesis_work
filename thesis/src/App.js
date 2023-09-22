@@ -4,7 +4,7 @@ import LoginPage from './Login';
 import FirebaseTest from './FirebaseTest';
 import RegisterPage from './RegisterPage';
 import RegisterDoc from './RegisterDoc';
-import PatientPage from './indexPatient'; // Assuming you have your components in the same directory
+import PatientPage from './indexPatient';
 import DoctorPage from './indexDoctor';
 import AdminPage from './indexAdmin';
 import EditDoctor from './EditDoctor';

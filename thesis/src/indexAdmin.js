@@ -14,8 +14,6 @@ function AdminPage() {
     const fetchUsers = async () => {
       const doctorsData = await getDocs(collection(db, "doctors"));
       const patientsData = await getDocs(collection(db, "patients"));
-  
-      // Update the way you set state to include the doc IDs
       setDoctors(doctorsData.docs.map(doc => ({ ...doc.data(), id: doc.id })));
       setPatients(patientsData.docs.map(doc => ({ ...doc.data(), id: doc.id })));
   
@@ -65,7 +63,6 @@ return(
               <td>{doctor.surname}</td>
               <td>{doctor.email}</td>
               <td>
-                {/* <button onClick={() => editUser('doctors', doctor.id)}>Edit</button> */}
                 <button>
                   <Link to={`/editDoctor/${doctor.id}`}>Edit</Link>
                 </button>
@@ -78,7 +75,7 @@ return(
     </div>
     <div className="booked-appointments">
 
-      {/* Similar table for patients... */}
+    
       <h2>Patients</h2>
       <table>
         <thead>

@@ -5,7 +5,7 @@ function LogoutButton() {
     let navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate("/logout");  // Redirect to Logout page
+    navigate("/logout");
   };
 
   return (

@@ -6,7 +6,7 @@ import './Register.css';
 import { useNavigate } from "react-router-dom";
 
 function RegisterDoc() {
-  const auth = getAuth(); // initialize authv
+  const auth = getAuth(); 
   const [formData, setFormData] = useState({
     personalID: '',
     name: '',
@@ -28,7 +28,7 @@ function RegisterDoc() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setErrors([]); // Clear errors when field value changes
+    setErrors([]); 
   };
 
   const handleSubmit = async (e) => {
@@ -39,27 +39,25 @@ function RegisterDoc() {
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
     const namePattern = /^[a-zA-Z]+$/;
 
-    // Check if all fields are filled
     if (Object.values(formData).some(value => value === "")) {
       newErrors.push("All fields must be filled!");
     }
 
-    // Check if names only contain letters
+
     if (!(namePattern.test(formData.name) && namePattern.test(formData.surname))) {
       newErrors.push("Name and surname should only contain letters");
     }
 
-    // Check if passwords match
+   
     if (formData.password !== formData.confirmPassword) {
       newErrors.push("Passwords do not match!");
     }
 
-    // Check if password length is between 8 and 20 characters, contains at least one number and rest can be letters
     if (!passwordPattern.test(formData.password)) {
       newErrors.push("Password should be between 8 and 20 characters and contain at least one number.");
     }
 
-    // Check if email is valid
+
     if (!emailPattern.test(formData.email)) {
       newErrors.push("Invalid email format.");
     }
@@ -69,7 +67,6 @@ function RegisterDoc() {
       return;
     }
 
-    // Query firestore for uniqueness of personalID, email and username
     const personalIDExists = await (await getDocs(query(collection(db, "doctors"), where("personalID", "==", formData.personalID)))).size > 0;
     const emailExists = await (await getDocs(query(collection(db, "doctors"), where("email", "==", formData.email)))).size > 0;
 
@@ -79,14 +76,13 @@ function RegisterDoc() {
     }
 
     try {
-      // create an authentication account for the user with Firebase Authentication
+     
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
       const uid = userCredential.user.uid;
-      // remove password fields from formData
       delete formData.password;
       delete formData.confirmPassword;
 
-      // add the rest of the form data to Firestore
+      
       const docRef = doc(db, "doctors", uid);
       await setDoc(docRef, formData);
 
@@ -104,7 +100,6 @@ function RegisterDoc() {
       <div className='register-form'>
       <form className='mainForm' onSubmit={handleSubmit}>
       <div className='register forms form-style'>
-        {/* Rest of your form fields */}
         <label>
           Personal ID:
           <input type="text" name="personalID" onChange={handleChange} required className='input input-field'/>

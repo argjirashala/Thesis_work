@@ -162,17 +162,15 @@ useEffect(() => {
 
     const updatedSlots = availableSlots.filter(slot => slot !== appointment.time).join(",");
     
-    // Update the doctor's availability in Firestore
     const docRef = doc(db, "doctors", selectedDoctor.id);
     const doctor = await getDoc(docRef);
     const currentAvailability = doctor.data().availability || {};
     currentAvailability[dateKey] = updatedSlots;
     await updateDoc(docRef, { availability: currentAvailability });
   
-    // Add the new appointment to the 'appointments' collection in Firestore
     const appointmentRef = collection(db, 'appointments');
     await addDoc(appointmentRef, {
-      patientId: userId,  // Replace with actual patient's ID
+      patientId: userId, 
       doctorId: selectedDoctor.id,
       date: appointment.date,
       time: appointment.time,
@@ -199,7 +197,7 @@ useEffect(() => {
     <p>Surname: {patientDetails.surname}</p>
     <p>Email: {patientDetails.email}</p>
     <button onClick={handleChangePassword}>Change Password</button>
-  </div>n
+  </div>
   </div>
   
 )}
