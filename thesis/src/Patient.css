@@ -48,11 +48,16 @@ button:hover {
     transform: translate(-50%, -50%);
     background-color: #fff;
     padding: 20px;
-    width: 80%;
-    max-width: 500px;
+    max-width: 1000px;
+  max-height: 1000px;
+  width: 100%;
+  height: 100%; 
+ 
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    max-height: 80vh;  
+    overflow-y: auto;  
 }
 
 .modal-background {
@@ -158,11 +163,15 @@ a:hover {
   }
   
   .appointment-card-doc {
-    width: 350px;
+    /* width: 350px; */
     margin: 15px;
     padding: 15px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     border-radius: 5px;
+    /* max-width: 1000px;
+  max-height: 1000px; */
+  width: 1000px;
+  height: 1000px;
     background-color: #fff;
     display: flex;
     flex-direction: column;
@@ -226,6 +235,13 @@ table tbody tr:hover {
 .search-container input[type="text"]:focus {
   border-color: #a0a0a0;
   box-shadow: 0 0 5px rgba(160, 160, 160, 0.5);
+}
+
+.iframe {
+  width: 100%; /* Fills the width of its container */
+  height: 600px;
+  /* height: calc(100% - 40px); Takes into account the padding and some extra room for the close button */
+  border: none; /* Removes default borders */
 }
 
 

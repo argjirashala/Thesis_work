@@ -5,9 +5,6 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import './Register.css';
 import { useNavigate } from "react-router-dom";
 
-
-
-
 function RegisterPage() {
   const auth = getAuth(); 
   const [formData, setFormData] = useState({
@@ -50,7 +47,7 @@ function RegisterPage() {
       newErrors.push("Name and surname should only contain letters");
     }
 
-
+    
     if (formData.password !== formData.confirmPassword) {
       newErrors.push("Passwords do not match!");
     }

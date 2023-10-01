@@ -11,7 +11,7 @@ const Modal = ({ isOpen, onClose, appointment }) => {
         <p>Diagnosis: {appointment.diagnosis}</p>
         <p>Therapy: {appointment.therapy}</p>
         {appointment.fileURL && (
-          <a href={appointment.fileURL} download>Download File</a>
+            <iframe className="iframe" src={appointment.fileURL}></iframe>
         )}
       </div>
     </div>

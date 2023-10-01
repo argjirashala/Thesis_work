@@ -8,18 +8,7 @@ import './Modal.css';
 import LogoutButton from "./LogoutButton";
 import { useNavigate } from "react-router-dom";
 import { sendPasswordResetEmail, getAuth } from "firebase/auth";
-// function Modal({ isOpen, onClose, children }) {
-//   if (!isOpen) return null;
-  
-//   return (
-//     <div>
-//       <div>
-//         <button className="close-btn" onClick={onClose}>Close</button>
-//         {children}
-//       </div>
-//     </div>
-//   );
-// }
+
 
 function DoctorPage() {
   const { userId } = useParams();
@@ -157,7 +146,6 @@ const togglePatientAppointments = (patientId) => {
     uploadTask.on(
         'state_changed',
         (snapshot) => {
-            // Progress handling can be added here
         },
         (error) => {
             console.error("File upload error:", error);
@@ -245,7 +233,7 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
         
         return (
           <div key={patientId} >
-            <div  className="appointment-card-doc">
+            <div  className="appointment-card">
             <p>Patient: {firstAppointment.patientName} {firstAppointment.patientSurname}</p>
             <button onClick={() => togglePatientAppointments(patientId)}>Appointments</button>
             </div>
@@ -273,6 +261,9 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
                       <><div>
                         <button onClick={() => setCurrentDetailsAppointment(appointment.id)}>Details</button>
                         <button onClick={() => setModifyAppointment(appointment.id)}>Modify</button>
+                        {appointment.fileURL && (
+            <iframe className="iframe" src={appointment.fileURL}></iframe>
+        )}
 
                         {currentDetailsAppointment === appointment.id && (
                           <div>
