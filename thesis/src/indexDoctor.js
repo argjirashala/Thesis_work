@@ -8,6 +8,7 @@ import './Modal.css';
 import LogoutButton from "./LogoutButton";
 import { useNavigate } from "react-router-dom";
 import { sendPasswordResetEmail, getAuth } from "firebase/auth";
+import PatientDetailsTable from './PatientsDetails';
 
 
 function DoctorPage() {
@@ -27,6 +28,49 @@ function DoctorPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [detailsVisible, setDetailsVisible] = useState(false);
   let navigate = useNavigate();
+
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [error, setError] = useState(null);
+
+  const handleAddSlot = () => {
+    // reset error state
+    setError(null);
+
+    if (startTime >= endTime) {
+    console.log("Error condition met!");
+    setError("End time should be after start time.");
+    return;
+}
+
+
+    const dateKey = selectedDate.toISOString().split("T")[0];
+    const newSlot = `${startTime}-${endTime}`;
+    setAvailability(prev => ({
+        ...prev,
+        [dateKey]: [...(prev[dateKey] || []), newSlot]
+    }));
+    setStartTime("");
+    setEndTime("");
+};
+
+const handleRemoveSlot = (slotToRemove) => {
+    const dateKey = selectedDate.toISOString().split("T")[0];
+    setAvailability(prev => ({
+        ...prev,
+        [dateKey]: prev[dateKey].filter(slot => slot !== slotToRemove)
+    }));
+};
+
+const dateKey = selectedDate.toISOString().split("T")[0];
+const selectedTimeSlots = availability[dateKey] || [];
+
+useEffect(() => {
+  console.log("Error state changed to:", error);
+}, [error]);
+
+
+
 
   const handleChangePassword = () => {
     const auth = getAuth();
@@ -58,62 +102,13 @@ function DoctorPage() {
   }, [userId]);
 
 
-  useEffect(() => {
-    const fetchBookedAppointments = async () => {
-      const q = query(collection(db, "appointments"), where("doctorId", "==", userId));
-      const querySnapshot = await getDocs(q);
-      const appointments = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })); // Include the doc.id
-
-      for (let appointment of appointments) {
-        const patientRef = doc(db, "patients", appointment.patientId);
-        const patientSnapshot = await getDoc(patientRef);
-
-        if (patientSnapshot.exists()) {
-          appointment.patientName = patientSnapshot.data().name;
-          appointment.patientSurname = patientSnapshot.data().surname;
-        }
-      }
-
-      setBookedAppointments(appointments);
-    };
-
-    fetchBookedAppointments();
-}, [userId]);
-
-const togglePatientAppointments = (patientId) => {
-  if (currentPatientAppointments === patientId) {
-    setCurrentPatientAppointments(null);
-    setIsModalOpen(false);  
-  } else {
-    setCurrentPatientAppointments(patientId);
-    setIsModalOpen(true); 
-  }
-};
-
-
-
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-  const handleTimeChange = (e) => {
-    const time = e.target.value;
-    const dateKey = selectedDate.toISOString().split("T")[0];
-    setAvailability({
-      ...availability,
-      [dateKey]: time,
-    });
-  };
-
   const handleSaveAvailability = async () => {
     const docRef = doc(db, "doctors", userId);
     await setDoc(docRef, { availability }, { merge: true });
     alert("Availability saved successfully!");
   };
 
-  const dateKey = selectedDate.toISOString().split("T")[0];
-  const selectedTime = availability[dateKey] || "";
+ 
 
   const handleDiagnosisChange = (e) => {
     setDiagnosisText(e.target.value);
@@ -123,14 +118,32 @@ const togglePatientAppointments = (patientId) => {
     setTherapyText(e.target.value);
   };
 
+  // const handleSaveDiagnosisAndTherapy = async (appointmentId) => {
+  //   const appointmentRef = doc(db, "appointments", appointmentId);
+  //   await setDoc(appointmentRef, { diagnosis: diagnosisText, therapy: therapyText }, { merge: true }); // Save both diagnosis and therapy
+  //   setCurrentDiagnosisAppointment(null);
+  //   setDiagnosisText('');
+  //   setTherapyText('');
+  //   alert("Diagnosis and therapy saved successfully!");
+  // };
+
   const handleSaveDiagnosisAndTherapy = async (appointmentId) => {
     const appointmentRef = doc(db, "appointments", appointmentId);
-    await setDoc(appointmentRef, { diagnosis: diagnosisText, therapy: therapyText }, { merge: true }); // Save both diagnosis and therapy
-    setCurrentDiagnosisAppointment(null);
-    setDiagnosisText('');
-    setTherapyText('');
-    alert("Diagnosis and therapy saved successfully!");
+    const appointmentSnapshot = await getDoc(appointmentRef);
+    if (appointmentSnapshot.exists()) {
+      const appointment = appointmentSnapshot.data();
+      await setDoc(appointmentRef, {
+        diagnosis: diagnosisText,
+        therapy: therapyText,
+        date: appointment.date
+      }, { merge: true });
+      setCurrentDiagnosisAppointment(null);
+      setDiagnosisText('');
+      setTherapyText('');
+      alert("Diagnosis and therapy saved successfully!");
+    }
   };
+  
  
   
 
@@ -161,26 +174,47 @@ const togglePatientAppointments = (patientId) => {
 const handleFileChange = (e) => {
   const file = e.target.files[0];
   if (file) {
+    console.log(file);
     setUploadingFile(file);
   } else {
     alert("Failed to select file. Please try again!");
   }
 }
 
+const [todaysAppointments, setTodaysAppointments] = useState([]);
+const [upcomingAppointments, setUpcomingAppointments] = useState([]);
+
+useEffect(() => {
+  const fetchBookedAppointments = async () => {
+    const q = query(collection(db, "appointments"), where("doctorId", "==", userId));
+    const querySnapshot = await getDocs(q);
+    const appointments = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })); // Include the doc.id
+
+    for (let appointment of appointments) {
+      const patientRef = doc(db, "patients", appointment.patientId);
+      const patientSnapshot = await getDoc(patientRef);
+
+      if (patientSnapshot.exists()) {
+        appointment.patientName = patientSnapshot.data().name;
+        appointment.patientSurname = patientSnapshot.data().surname;
+      }
+    }
+
+    setBookedAppointments(appointments);
+
+    const todayDate = new Date().toISOString().split("T")[0];
+
+    const todays = appointments.filter(app => app.date === todayDate);
+    const upcoming = appointments.filter(app => new Date(app.date) > new Date());
+
+    setTodaysAppointments(todays);
+    setUpcomingAppointments(upcoming);
+  };
+
+  fetchBookedAppointments();
+}, [userId]);
 
 
-const sortedAppointments = bookedAppointments.sort((a, b) => {
-  const dateA = new Date(a.date);  
-  const dateB = new Date(b.date);
-
-  if (dateA < new Date() && dateB >= new Date()) {
-    return 1;
-  }
-  if (dateA >= new Date() && dateB < new Date()) {
-    return -1;
-  }
-  return dateA - dateB;  
-});
 
  return (
   <div>
@@ -207,114 +241,96 @@ const sortedAppointments = bookedAppointments.sort((a, b) => {
 )}
     <div className="booked-appointments">
       
+    <div className="availability-section">
     <h3>Set Your Availability</h3>
-    <DatePicker selected={selectedDate} onChange={handleDateChange} />
-    <label>
-      Times:
-      <input
-        type="text"
-        placeholder="09:00-12:00,14:00-16:00"
-        onChange={handleTimeChange}
-        value={selectedTime}
-      />
-    </label>
+    
+    {/* <DatePicker selected={selectedDate} onChange={handleDateChange} /> */}
+    <DatePicker selected={selectedDate} onChange={setSelectedDate} />
+            <div>
+                <label>Start Time:</label>
+                <input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} />
+
+                <label>End Time:</label>
+                <input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} />
+
+                <button onClick={handleAddSlot} disabled={startTime >= endTime}>Add Slot</button>
+            </div>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <h4>Your availability slots:</h4>
+            {selectedTimeSlots.map((slot, index) => (
+                <div key={index}>
+                    {slot} <button onClick={() => handleRemoveSlot(slot)}>Remove</button>
+                </div>
+            ))}
+
+            
     <button onClick={handleSaveAvailability}>Save Availability</button>
+  </div>
+
     </div>
     
     <div className="booked-appointments">
-    <h2>Your Booked Appointments</h2>
+    <h2>Today's Appointments</h2>
     <div className="appointments-row">
-    
-      
-      
-      {[...new Set(sortedAppointments.map(app => app.patientId))].map(patientId => {
-        const patientAppointments = sortedAppointments.filter(app => app.patientId === patientId);
-        const firstAppointment = patientAppointments[0];
-        
-        return (
-          <div key={patientId} >
-            <div  className="appointment-card">
-            <p>Patient: {firstAppointment.patientName} {firstAppointment.patientSurname}</p>
-            <button onClick={() => togglePatientAppointments(patientId)}>Appointments</button>
-            </div>
-            
-            
-            
-      
-            {currentPatientAppointments === patientId && (
-              <div className="modal">
-                <button className="close-btn" onClick={() => setCurrentPatientAppointments(null)}>&times;</button>
-                {patientAppointments.map(appointment => (
-                  <>
-                  
-                  <div key={appointment.id} className="appointment-card-doc">
-                    Patient's name: {appointment.patientName}
-                    <br />
-                    Patient's surname: {appointment.patientSurname}
-                    <br />
-                    Date: {appointment.date}
-                    <br />
-                    Time: {appointment.time}
-                    <br />
-
-                    {appointment.diagnosis && appointment.therapy ? (
-                      <><div>
-                        <button onClick={() => setCurrentDetailsAppointment(appointment.id)}>Details</button>
-                        <button onClick={() => setModifyAppointment(appointment.id)}>Modify</button>
-                        {appointment.fileURL && (
-            <iframe className="iframe" src={appointment.fileURL}></iframe>
-        )}
-
-                        {currentDetailsAppointment === appointment.id && (
-                          <div>
-                            <p>Diagnosis: {appointment.diagnosis}</p>
-                            <p>Therapy: {appointment.therapy}</p>
-                          </div>
-                        )}
-
-                        {modifyAppointment === appointment.id && (
-                          <div>
-                            <textarea value={diagnosisText} onChange={handleDiagnosisChange} placeholder="Enter diagnosis..."></textarea>
-                            <textarea value={therapyText} onChange={handleTherapyChange} placeholder="Enter therapy..."></textarea>
-                            <button onClick={() => {
-                              handleSaveDiagnosisAndTherapy(appointment.id);
-                              setModifyAppointment(null);
-                            } }>Save Changes</button>
-                          </div>
-                        )}
-                      </div><br></br></>
-                    ) : (
-                      <><br></br><button onClick={() => setCurrentDiagnosisAppointment(appointment.id)}>Add Diagnosis and Therapy</button></>
-
-                    )}
-                    <br></br>
-                    <input type="file" onChange={handleFileChange} />
+  
+  {todaysAppointments.map(appointment => (
+    <div key={appointment.id} className="appointment-card">
+      Patient's name: {appointment.patientName}
+      <br />
+      Date: {appointment.date}
+      <br />
+      Time: {appointment.time}
+      <br />
+      Reason: {appointment.reason}
+      <br />
+      <button onClick={() => setCurrentDiagnosisAppointment(appointment.id)}>
+        Add Diagnosis and Therapy
+      </button>
+      {currentDiagnosisAppointment === appointment.id && (
+        <div className="modal">
+          <br></br>
+          <br></br>
+          <button className="close-btn" onClick={() => setCurrentDiagnosisAppointment(null)}>&times;</button>
+          <textarea value={diagnosisText} onChange={handleDiagnosisChange} placeholder="Enter diagnosis..."></textarea>
+          <textarea value={therapyText} onChange={handleTherapyChange} placeholder="Enter therapy..."></textarea>
+          <input type="file" onChange={handleFileChange} />
                     <button onClick={() => {
                       handleFileUpload(uploadingFile, appointment.id);
                     } }>Upload File</button>
-
-
-                    {currentDiagnosisAppointment === appointment.id && (
-                      <div>
-                        <textarea value={diagnosisText} onChange={handleDiagnosisChange} placeholder="Enter diagnosis..."></textarea>
-                        <textarea value={therapyText} onChange={handleTherapyChange} placeholder="Enter therapy..."></textarea>
-                        <button onClick={() => {
-                          handleSaveDiagnosisAndTherapy(appointment.id);
-                          setCurrentDiagnosisAppointment(null);
-                        } }>Save Diagnosis and Therapy</button>
-                      </div>
-                    )}
-                  </div><br></br></>
-                ))}
-                <hr></hr>
-              </div>
-            )}
-            </div>
+          <br></br>
           
-        );
-      })}
+          <button onClick={() => {
+            handleSaveDiagnosisAndTherapy(appointment.id);
+            setCurrentDiagnosisAppointment(null);
+          }}>Save Diagnosis and Therapy</button>
+          
+          
+        </div>
+      )}
     </div>
+  ))}
+  </div>
+</div>
+
+<div className="booked-appointments">
+  <h2>Upcoming Appointments</h2>
+  {upcomingAppointments.map(appointment => (
+    <div key={appointment.id} className="appointment-card">
+      Patient's name: {appointment.patientName}
+      <br />
+      Date: {appointment.date}
+      <br />
+      Time: {appointment.time}
+      <br />
+      Reason: {appointment.reason}
+      <br />
+      {/* Additional code if you need buttons or actions for upcoming appointments */}
     </div>
+  ))}
+</div>
+<div>
+<PatientDetailsTable />
+</div>
   </div>
 );
 

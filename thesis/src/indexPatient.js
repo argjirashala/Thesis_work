@@ -80,10 +80,15 @@ useEffect(() => {
 
 useEffect(() => {
   if (selectedDoctor && selectedDate) {
-    const slots = selectedDoctor.availability[selectedDate] || "";
-    setAvailableSlots(slots.split(","));
+    const slots = selectedDoctor.availability[selectedDate] || [];
+    if (Array.isArray(slots)) {
+      setAvailableSlots(slots);
+    } else {
+      console.error("slots is not an array", slots);
+    }
   }
 }, [selectedDoctor, selectedDate]);
+
 
 useEffect(() => {
   const fetchBookedAppointments = async () => {
