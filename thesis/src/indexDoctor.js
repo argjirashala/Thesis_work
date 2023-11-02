@@ -11,6 +11,7 @@ import { sendPasswordResetEmail, getAuth } from "firebase/auth";
 import PatientDetailsTable from './PatientsDetails';
 
 
+
 function DoctorPage() {
   const { userId } = useParams();
   const [doctorDetails, setDoctorDetails] = useState(null);
@@ -85,6 +86,9 @@ useEffect(() => {
   };
 
 
+  
+
+
   useEffect(() => {
     const fetchDoctorDetails = async () => {
       const docRef = doc(db, "doctors", userId);
@@ -127,6 +131,12 @@ useEffect(() => {
   //   alert("Diagnosis and therapy saved successfully!");
   // };
 
+  const removeAppointmentFromToday = (appointmentId) => {
+    setTodaysAppointments((prevAppointments) => 
+      prevAppointments.filter((appointment) => appointment.id !== appointmentId)
+    );
+  };
+
   const handleSaveDiagnosisAndTherapy = async (appointmentId) => {
     const appointmentRef = doc(db, "appointments", appointmentId);
     const appointmentSnapshot = await getDoc(appointmentRef);
@@ -140,6 +150,7 @@ useEffect(() => {
       setCurrentDiagnosisAppointment(null);
       setDiagnosisText('');
       setTherapyText('');
+      removeAppointmentFromToday(appointmentId);
       alert("Diagnosis and therapy saved successfully!");
     }
   };
@@ -181,38 +192,44 @@ const handleFileChange = (e) => {
   }
 }
 
+
+
+
 const [todaysAppointments, setTodaysAppointments] = useState([]);
 const [upcomingAppointments, setUpcomingAppointments] = useState([]);
+const fetchBookedAppointments = async () => {
+  const q = query(collection(db, "appointments"), where("doctorId", "==", userId));
+  const querySnapshot = await getDocs(q);
+  const appointments = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })); // Include the doc.id
+
+  for (let appointment of appointments) {
+    const patientRef = doc(db, "patients", appointment.patientId);
+    const patientSnapshot = await getDoc(patientRef);
+
+    if (patientSnapshot.exists()) {
+      appointment.patientName = patientSnapshot.data().name;
+      appointment.patientSurname = patientSnapshot.data().surname;
+    }
+  }
+
+  setBookedAppointments(appointments);
+
+  const todayDate = new Date().toISOString().split("T")[0];
+
+  const todays = appointments.filter(app => app.date === todayDate && app.therapy === '' && app.diagnosis === '');
+  const upcoming = appointments.filter(app => new Date(app.date) > new Date());
+
+  setTodaysAppointments(todays);
+  setUpcomingAppointments(upcoming);
+};
 
 useEffect(() => {
-  const fetchBookedAppointments = async () => {
-    const q = query(collection(db, "appointments"), where("doctorId", "==", userId));
-    const querySnapshot = await getDocs(q);
-    const appointments = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })); // Include the doc.id
-
-    for (let appointment of appointments) {
-      const patientRef = doc(db, "patients", appointment.patientId);
-      const patientSnapshot = await getDoc(patientRef);
-
-      if (patientSnapshot.exists()) {
-        appointment.patientName = patientSnapshot.data().name;
-        appointment.patientSurname = patientSnapshot.data().surname;
-      }
-    }
-
-    setBookedAppointments(appointments);
-
-    const todayDate = new Date().toISOString().split("T")[0];
-
-    const todays = appointments.filter(app => app.date === todayDate);
-    const upcoming = appointments.filter(app => new Date(app.date) > new Date());
-
-    setTodaysAppointments(todays);
-    setUpcomingAppointments(upcoming);
-  };
-
   fetchBookedAppointments();
 }, [userId]);
+
+
+
+
 
 
 
@@ -329,7 +346,8 @@ useEffect(() => {
   ))}
 </div>
 <div>
-<PatientDetailsTable />
+<PatientDetailsTable/>
+
 </div>
   </div>
 );

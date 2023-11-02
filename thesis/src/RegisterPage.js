@@ -100,29 +100,29 @@ function RegisterPage() {
       <div className='register-form'>
       <form className='mainForm' onSubmit={handleSubmit}>
       <div className='register forms form-style'>
-        <label>
+        <label htmlFor='personalID'>
           Personal ID:
-          <input type="text" name="personalID" onChange={handleChange} required className='input input-field' />
+          <input data-testid='testid' type="text" name="personalID" onChange={handleChange} required className='input input-field' />
         </label>
         <br></br>
-        <label>
+        <label htmlFor='name'>
           Name:
-          <input type="text" name="name" onChange={handleChange} required className='input input-field' />
+          <input data-testid='testname' type="text" name="name" onChange={handleChange} required className='input input-field' />
         </label>
         <br></br>
-        <label>
+        <label htmlFor='surname'>
           Surname:
-          <input type="text" name="surname" onChange={handleChange} required className='input input-field'/>
+          <input data-testid='surname' type="text" name="surname" onChange={handleChange} required className='input input-field'/>
         </label>
         <br></br>
-        <label>
+        <label htmlFor='date'>
           Birthday:
-          <input type="date" name="birthday" onChange={handleChange} required className='input input-field'/>
+          <input data-testid='date' type="date" name="birthday" onChange={handleChange} required className='input input-field'/>
         </label>
         <br></br>
-        <label>
+        <label htmlFor='gender'>
   Gender:
-  <select name="gender" onChange={handleChange} required className='input input-field'>
+  <select data-testid='gender' name="gender" onChange={handleChange} required className='input input-field'>
     <option value="">Select...</option>
     <option value="male">Male</option>
     <option value="female">Female</option>
@@ -130,34 +130,34 @@ function RegisterPage() {
   </select>
 </label>
 <br></br>
-        <label>
+        <label htmlFor='address'>
           Address:
-          <input type="text" name="address" onChange={handleChange} required className='input input-field' />
+          <input data-testid='address' type="text" name="address" onChange={handleChange} required className='input input-field' />
         </label>
         <br></br>
-        <label>
+        <label htmlFor='phone'>
           Phone:
-          <input type="number" name="phone" onChange={handleChange} required className='input input-field'  />
+          <input data-testid='phone' type="number" name="phone" onChange={handleChange} required className='input input-field'  />
         </label>
         <br></br>
-        <label>
+        <label htmlFor='email'>
           Email:
-          <input type="text" name="email" onChange={handleChange} required className='input input-field' />
+          <input data-testid='email' type="text" name="email" onChange={handleChange} required className='input input-field' />
         </label>
         <br></br>
-        <label>
+        <label htmlFor='password'>
           Password:
-          <input type="password" name="password" onChange={handleChange} required className='input input-field'  />
+          <input data-testid='password' type="password" name="password" onChange={handleChange} required className='input input-field'  />
         </label>
         <br></br>
-        <label>
+        <label htmlFor='confirmPassword'> 
           Confirm Password:
-          <input type="password" name="confirmPassword" onChange={handleChange} required className='input input-field' />
+          <input data-testid='confirmPassword' type="password" name="confirmPassword" onChange={handleChange} required className='input input-field' />
         </label>
         <br></br>
         <br></br>
         {/* ... */}
-        <button type="submit" className='input submit'>Register</button>
+        <button data-testId='submit' type="submit" className='input submit'>Register</button>
         <br></br>
         <br></br>
         {errors.length > 0 && (

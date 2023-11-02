@@ -49,6 +49,9 @@ useEffect(() => {
     if (patientDoc.exists()) {
       setPatientDetails(patientDoc.data());
     }
+    else {
+      console.error('Patient document does not exist');
+    }
   };
   
   fetchPatientDetails();

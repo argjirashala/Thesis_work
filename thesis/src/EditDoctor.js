@@ -106,29 +106,29 @@ const emailExists = await (await getDocs(query(collection(db, "doctors"), where(
       <div className='parent-container'>
       <div className='register-form'>
       <form onSubmit={handleSubmit} className='mainForm'>
-        <label>
+      <label>
           Personal ID:
-          <input type="text" name="personalID" onChange={handleChange} required className='input input-field' value={formData.personalID}/>
+          <input data-testId="personalID" type="text" name="personalID" onChange={handleChange} required className='input input-field'/>
         </label>
         <br></br>
         <label>
           Name:
-          <input type="text" name="name" onChange={handleChange} required className='input input-field' value={formData.name}/>
+          <input data-testId="name" type="text" name="name" onChange={handleChange} required className='input input-field'/>
         </label>
         <br></br>
         <label>
           Surname:
-          <input type="text" name="surname" onChange={handleChange} required className='input input-field' value={formData.surname} />
+          <input data-testId="surname" type="text" name="surname" onChange={handleChange} required className='input input-field' />
         </label>
         <br></br>
         <label>
           Birthday:
-          <input type="date" name="birthday" onChange={handleChange} required className='input input-field' value={formData.birthday} />
+          <input data-testId="date" type="date" name="birthday" onChange={handleChange} required className='input input-field'/>
         </label>
         <br></br>
         <label>
   Gender:
-  <select name="gender" onChange={handleChange} required className='input input-field' value={formData.gender}>
+  <select data-testId="gender" name="gender" onChange={handleChange} required className='input input-field'>
     <option value="">Select...</option>
     <option value="male">Male</option>
     <option value="female">Female</option>
@@ -138,12 +138,12 @@ const emailExists = await (await getDocs(query(collection(db, "doctors"), where(
 <br></br>
 <label>
           Clinic name:
-          <input type="text" name="clinic" onChange={handleChange} required className='input input-field' value={formData.clinic} />
+          <input data-testId="clinic" type="text" name="clinic" onChange={handleChange} required className='input input-field'/>
         </label>
         <br></br>
         <label>
   Specialization:
-  <select name="specialization" onChange={handleChange} required className='input input-field' value={formData.specialization}>
+  <select data-testId="specialization" name="specialization" onChange={handleChange} required className='input input-field'>
     <option value="">Select...</option>
     <option value="AerospaceMedicineSpecialist">Aerospace Medicine Specialist</option>
     <option value="Allergist">Allergist</option>
@@ -198,32 +198,32 @@ const emailExists = await (await getDocs(query(collection(db, "doctors"), where(
 <br></br>
         <label>
           Address:
-          <input type="text" name="address" onChange={handleChange} required className='input input-field' value={formData.address} />
+          <input data-testId="address"type="text" name="address" onChange={handleChange} required className='input input-field' />
         </label>
         <br></br>
         <label>
           Phone:
-          <input type="number" name="phone" onChange={handleChange} required className='input input-field' value={formData.phone}/>
+          <input data-testId="phone" type="number" name="phone" onChange={handleChange} required className='input input-field'/>
         </label>
         <br></br>
         <label>
           Email:
-          <input type="text" name="email" onChange={handleChange} required className='input input-field' value={formData.email} />
+          <input data-testId="email" type="text" name="email" onChange={handleChange} required className='input input-field'/>
         </label>
         <br></br>
         <label>
           Password:
-          <input type="password" name="password" onChange={handleChange} required className='input input-field' value={formData.password} />
+          <input data-testId="password" type="password" name="password" onChange={handleChange} required className='input input-field'/>
         </label>
         <br></br>
         <label>
           Confirm Password:
-          <input type="password" name="confirmPassword" onChange={handleChange} required className='input input-field' value={formData.password}/>
+          <input data-testId="confirmPassword" type="password" name="confirmPassword" onChange={handleChange} required className='input input-field' />
         </label>
         <br></br>
         <br></br>
         {/* ... */}
-        <button type="submit" className='input submit'>Edit</button>
+        <button data-testId="submit" name="edit" type="submit" className='input submit'>Edit</button>
         <br></br>
         <br></br>
         {errors.length > 0 && (

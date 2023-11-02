@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
 import './Patient.css';
+import EditPatientModal from "./EditPatientModal";
 
 
 
@@ -9,6 +10,8 @@ function PatientDetailsTable() {
     const [patients, setPatients] = useState([]);
     const [selectedPatient, setSelectedPatient] = useState(null);
     const db = getFirestore();
+    const [editingPatient, setEditingPatient] = useState(null);
+
   
     useEffect(() => {
         const fetchPatients = async () => {
@@ -36,6 +39,22 @@ function PatientDetailsTable() {
       
         fetchPatients();
       }, [db]);
+
+      const handleSave = async (editedData) => {
+        try {
+          const appointmentRef = doc(db, "appointments", editingPatient.id);
+          await setDoc(appointmentRef, { ...editingPatient, ...editedData }, { merge: true });
+          
+          setPatients((prevPatients) =>
+            prevPatients.map((p) =>
+              p.id === editingPatient.id ? { ...p, ...editedData } : p
+            )
+          );
+        } catch (error) {
+          console.error("Error updating document: ", error);
+        }
+      };
+      
       
     return (
         <div className="booked-appointments">
@@ -55,8 +74,18 @@ function PatientDetailsTable() {
                   <td>{patient.patientName}</td>
                   <td>{patient.patientSurname}</td>
                   <td>{patient.date}</td>
-                  <td><button onClick={() => setSelectedPatient(patient)}>Details</button></td>
+                  <button onClick={() => setSelectedPatient(patient)}>Details</button>
+                  <button onClick={() => setEditingPatient(patient)}>Edit</button>
+                  {editingPatient && (
+  <EditPatientModal
+    patient={editingPatient}
+    onClose={() => setEditingPatient(null)}
+    onSave={handleSave}
+  />
+)}
                 </tr>
+
+                
               ))}
             </tbody>
           </table>
@@ -70,6 +99,7 @@ function PatientDetailsTable() {
               {selectedPatient.fileURL && (
             <iframe className="iframe" src={selectedPatient.fileURL}></iframe>
         )}
+        
             </div>
           )}
         </div>
