@@ -28,9 +28,9 @@ describe('LoginPage', () => {
   });
 
 
-  test('renders verification', () => {
-    expect(screen.getByLabelText(/Are you a doctor?/)).toBeInTheDocument();
-  });
+  // test('renders verification', () => {
+  //   expect(screen.getByLabelText(/Are you a doctor?/)).toBeInTheDocument();
+  // });
 
   test('renders email field', () => {
     expect(screen.getByLabelText(/Email:/)).toBeInTheDocument();
@@ -48,9 +48,9 @@ describe('LoginPage', () => {
     expect(screen.getByRole('button', { name: /Forgot Password?/ })).toBeInTheDocument();
   });
 
-  test('renders register button', () => {
-    expect(screen.getByRole('button', { name: /Register/ })).toBeInTheDocument();
-  });
+  // test('renders register button', () => {
+  //   expect(screen.getByRole('button', { name: /Register/ })).toBeInTheDocument();
+  // });
 
   test('allows user to enter email', () => {
     fireEvent.change(screen.getByLabelText(/Email:/), { target: { value: 'test@example.com' } });

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
-import './Patient.css';
+import './Doctor.css';
 import EditPatientModal from "./EditPatientModal";
+import Table from '@mui/material/Table';
 
 
 
@@ -23,7 +24,7 @@ function PatientDetailsTable() {
           const diagnosisPatients = diagnosisSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
           const therapyPatients = therapySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
       
-          const patientsData = [...diagnosisPatients, ...therapyPatients];
+          const patientsData = [...diagnosisPatients];
       
           for (let data of patientsData) {
             const patientRef = doc(db, "patients", data.patientId);
@@ -58,7 +59,7 @@ function PatientDetailsTable() {
       
     return (
         <div className="booked-appointments">
-          <h2>List of Patients</h2>
+          <h2>List of Appointments</h2>
           <table>
             <thead>
               <tr>
@@ -66,6 +67,7 @@ function PatientDetailsTable() {
                 <th>Surname</th>
                 <th>Date</th>
                 <th>Details</th>
+                <th>Edit</th>
               </tr>
             </thead>
             <tbody>
@@ -74,8 +76,9 @@ function PatientDetailsTable() {
                   <td>{patient.patientName}</td>
                   <td>{patient.patientSurname}</td>
                   <td>{patient.date}</td>
-                  <button onClick={() => setSelectedPatient(patient)}>Details</button>
-                  <button onClick={() => setEditingPatient(patient)}>Edit</button>
+                  <td><button onClick={() => setSelectedPatient(patient)}>Details</button></td>
+                  <td><button onClick={() => setEditingPatient(patient)}>Edit</button></td>
+                  
                   {editingPatient && (
   <EditPatientModal
     patient={editingPatient}
@@ -96,6 +99,8 @@ function PatientDetailsTable() {
               <p>{selectedPatient.diagnosis}</p>
               <h3>Therapy</h3>
               <p>{selectedPatient.therapy}</p>
+              <h3>Link for extra information</h3>
+              <p>{selectedPatient.info}</p>
               {selectedPatient.fileURL && (
             <iframe className="iframe" src={selectedPatient.fileURL}></iframe>
         )}

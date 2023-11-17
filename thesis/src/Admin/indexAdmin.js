@@ -1,9 +1,9 @@
 import { deleteDoc } from "firebase/firestore";
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,NavLink } from "react-router-dom";
 import { getFirestore, doc, setDoc, collection,  getDocs } from "firebase/firestore";
 import { Link } from 'react-router-dom';
-import LogoutButton from "./LogoutButton";
+import LogoutButton from "../Logout/LogoutButton";
 
 
 function AdminPage() {
@@ -43,7 +43,32 @@ function AdminPage() {
 
 
 return(
-  <><LogoutButton /><div>
+  <><nav>
+  <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', // Apply space-between here
+        width: '100%', 
+        paddingRight: '1rem',  
+        flexWrap: 'wrap' 
+      }}>
+    <div style={{ display: 'flex', alignItems: 'center' }}> {/* Wrap NavLinks in a flex container */}
+    <NavLink to={`/indexAdmin`} style={({ isActive }) => ({
+              backgroundColor: isActive ? ' #005cbf' : ''
+          })}>List Of Doctors</NavLink>
+     <NavLink to={`/patienttable`} style={({ isActive }) => ({
+              backgroundColor: isActive ? ' #005cbf' : ''
+          })}>List Of Patients</NavLink>
+          <NavLink to={`/registerdoc`} style={({ isActive }) => ({
+              backgroundColor: isActive ? ' #005cbf' : ''
+          })}>Register Doctor</NavLink>
+          <NavLink to={`/register`} style={({ isActive }) => ({
+              backgroundColor: isActive ? ' #005cbf' : ''
+          })}>Register Patient</NavLink>
+    </div>
+    <LogoutButton style={{ marginLeft: 'auto' }} /> {/* This will be pushed to the right corner */}
+  </div>
+</nav>
     <div className="booked-appointments">
       <h2>Doctors</h2>
 
@@ -53,7 +78,8 @@ return(
             <th>Name</th>
             <th>Surname</th>
             <th>Email</th>
-            <th>Actions</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -64,26 +90,28 @@ return(
               <td>{doctor.email}</td>
               <td>
                 <button>
-                  <Link to={`/editDoctor/${doctor.id}`}>Edit</Link>
+                  <Link style={{color:"black"}} to={`/editDoctor/${doctor.id}`}>Edit</Link>
                 </button>
-                <button onClick={() => deleteUser('doctors', doctor.id)}>Delete</button>
+                
               </td>
+              <td><button style={{color:"white", backgroundColor: "red"}} onClick={() => deleteUser('doctors', doctor.id)}>Delete</button></td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-    <div className="booked-appointments">
+    {/* <div className="booked-appointments"> */}
 
     
-      <h2>Patients</h2>
+      {/* <h2>Patients</h2>
       <table>
         <thead>
           <tr>
             <th>Name</th>
             <th>Surname</th>
             <th>Email</th>
-            <th>Actions</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -96,14 +124,17 @@ return(
                 <button>
                   <Link to={`/editPatient/${patient.id}`}>Edit</Link>
                 </button>
-                <button onClick={() => deleteUser('patients', patient.id)}>Delete</button>
+                
               </td>
+              <td><button onClick={() => deleteUser('patients', patient.id)}>Delete</button></td>
+              
             </tr>
           ))}
         </tbody>
       </table>
-    </div>
-  </div></>
+    </div> */}
+  {/* </div> */}
+  </>
 )
 
   

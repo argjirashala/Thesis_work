@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { addDoc, setDoc, doc, collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from './firebase';
+import { setDoc, doc, collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../firebase';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import './Register.css';
 import { useNavigate } from "react-router-dom";
@@ -79,6 +79,7 @@ function RegisterPage() {
       const uid = userCredential.user.uid;
       delete formData.password;
       delete formData.confirmPassword;
+      
 
       const patientRef = doc(db, "patients", uid);
 
@@ -89,7 +90,7 @@ function RegisterPage() {
       alert(["Registration was successful!"]);
       navigate("/");
     } catch (error) {
-      setErrors([`Error adding document: ${error}`]);
+      alert([`Error adding document: ${error}`]);
     }
   };
   

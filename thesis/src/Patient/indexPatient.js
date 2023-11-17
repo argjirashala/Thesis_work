@@ -1,9 +1,9 @@
 import React, { useState, useEffect} from 'react';
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { getFirestore, collection, query, where, getDocs, doc,addDoc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import './Patient.css';
 import Modal from './Modal';
-import LogoutButton from './LogoutButton'
+import LogoutButton from '../Logout/LogoutButton'
 import { sendPasswordResetEmail, getAuth } from "firebase/auth";
 
 
@@ -190,12 +190,41 @@ useEffect(() => {
   
 
   return (
-    <div >
-      <h1 style={{color: "white"}}>Welcome!</h1>
-      <LogoutButton />
-      <button onClick={() => setDetailsVisible(!detailsVisible)}>
+
+      <div>
+        <nav>
+  <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', // Apply space-between here
+        width: '100%', 
+        paddingRight: '1rem',  
+        flexWrap: 'wrap' 
+      }}>
+    <div style={{ display: 'flex', alignItems: 'center' }}> {/* Wrap NavLinks in a flex container */}
+      <NavLink to={`/indexPatient/${userId}`} style={({ isActive }) => ({  
+                                backgroundColor: isActive ? ' #005cbf' : '' })}>Home</NavLink>
+      {/* <NavLink to={`/todaysappointments/${userId}`} activeClassName="active-link">Today's Appointments</NavLink> */}
+      <NavLink to={`/bookedappointments/${userId}`} style={({ isActive }) => ({  
+                                backgroundColor: isActive ? ' #005cbf' : '' })}>Booked appointments</NavLink>
+    </div>
+    <div>
+    <button onClick={() => setDetailsVisible(!detailsVisible)}>
   {detailsVisible ? "Hide Details" : "Show Details"}
 </button>
+&nbsp;&nbsp;
+    <LogoutButton style={{ marginLeft: 'auto' }} /> {/* This will be pushed to the right corner */}
+  </div>
+  </div>
+</nav>
+
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' ,paddingRight: '1rem'}}>
+  <h1 style={{ color: 'white' }}> &nbsp;Welcome!</h1>
+  {/* <LogoutButton style={{ marginLeft: '5rem' }} /> */}
+</div>
+      {/* &nbsp;&nbsp;<button onClick={() => setDetailsVisible(!detailsVisible)}>
+  {detailsVisible ? "Hide Details" : "Show Details"}
+</button> */}
 
 {detailsVisible && (
   <div className="appointment-card">
@@ -303,7 +332,7 @@ useEffect(() => {
 )}
 </div>
 
-<div className="booked-appointments">
+{/* <div className="booked-appointments">
   <h2>Your Booked Appointments</h2>
   <div className="appointments-row">
     {bookedAppointments.map(appointment => (
@@ -321,7 +350,7 @@ useEffect(() => {
       </div>
     ))}
   </div>
-</div>
+</div> */}
 
 </div>
   );

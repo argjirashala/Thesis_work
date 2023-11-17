@@ -49,7 +49,7 @@ jest.mock('firebase/firestore', () => ({
   
     test('renders without crashing', () => {
       const { getByText } = render(<Router><PatientDetailsTable /></Router>);
-      expect(getByText('List of Patients')).toBeInTheDocument();
+      expect(getByText('List of Appointments')).toBeInTheDocument();
     });
   
     test('displays patient data', async () => {

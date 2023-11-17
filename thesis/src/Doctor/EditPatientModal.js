@@ -9,6 +9,7 @@ function EditPatientModal({ patient, onClose, onSave }) {
   const [formData, setFormData] = useState({
     diagnosis: patient.diagnosis || "",
     therapy: patient.therapy || "",
+    info: patient.info || "",
     fileURL: patient.fileURL || "",
   });
 
@@ -68,25 +69,45 @@ function EditPatientModal({ patient, onClose, onSave }) {
       <button className="close-btn" onClick={onClose}>&times;</button>
       <h3>Edit Patient</h3>
       <form>
-        <label>Diagnosis</label>
-        <input
-          type="text"
-          name="diagnosis"
-          value={formData.diagnosis}
-          onChange={handleChange}
-        />
-        <label>Therapy</label>
-        <input
-          type="text"
-          name="therapy"
-          value={formData.therapy}
-          onChange={handleChange}
-        />
-        <label>File</label>
-        <input type="file" onChange={handleFileChange} />
-        <button type="button" onClick={() => handleFileUpload(uploadingFile)}>Upload File</button>
-        <button type="button" onClick={handleSave}>Save</button>
-      </form>
+    <div className="form-row">
+      <label>Diagnosis</label>
+      <input className='input-detail'
+        type="text"
+        name="diagnosis"
+        value={formData.diagnosis}
+        onChange={handleChange}
+      />
+    </div>
+    <div className="form-row">
+      <label>Therapy</label>
+      <input className='input-detail'
+        type="text"
+        name="therapy"
+        value={formData.therapy}
+        onChange={handleChange}
+      />
+    </div>
+    <div className="form-row">
+      <label>Link for extra information</label>
+      <input className='input-detail'
+        type="text"
+        name="therapy"
+        value={formData.info}
+        onChange={handleChange}
+      />
+    </div>
+    <div className="form-row"><br></br><br></br></div>
+    <div className="form-row">
+      <label>File</label>
+      <input type="file" onChange={handleFileChange} />
+    </div>
+    <div className="form-row">
+      <button className='detail-button' type="button" onClick={() => handleFileUpload(uploadingFile)}>Upload File</button>
+    </div>
+    <div className="form-row">
+      <button className='detail-button' type="button" onClick={handleSave}>Save</button>
+    </div>
+  </form>
     </div>
   );
 }

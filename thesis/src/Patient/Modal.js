@@ -1,5 +1,6 @@
 import React from 'react';
 import './Modal.css';
+import QRCode from 'qrcode.react';
 
 const Modal = ({ isOpen, onClose, appointment }) => {
   if (!isOpen) return null;
@@ -10,6 +11,8 @@ const Modal = ({ isOpen, onClose, appointment }) => {
         <button className="close-btn" onClick={onClose}>X</button>
         <p>Diagnosis: {appointment.diagnosis}</p>
         <p>Therapy: {appointment.therapy}</p>
+        <p>For extra information scan the QR code below:</p>
+        <QRCode value={`${appointment.info}`} />
         {appointment.fileURL && (
             <iframe className="iframe" src={appointment.fileURL}></iframe>
         )}

@@ -10,10 +10,12 @@
   justify-content: center;
   z-index: 1000;
   pointer-events: none;
+  overflow-y: auto; 
 }
 
 .modal-content {
   background-color: #fff;
+  color: black;
   padding: 20px;
   border-radius: 5px;
   position: relative;
@@ -22,7 +24,7 @@
   width: 80%;
   height: 80%; /* Added this to specify the modal's height */
   pointer-events: auto;
-  overflow: hidden; /* This will ensure content doesn't overflow the modal */
+  overflow-y: auto; /* This will ensure content doesn't overflow the modal */
 }
 
 .close-btn {
@@ -36,9 +38,4 @@
   z-index: 1; /* Ensures the close button stays above the iframe */
 }
 
-/* .iframe {
-  width: 100%; 
-  height: calc(100% - 40px);
-  border: none;
-} */
 

@@ -1,46 +1,57 @@
 import React from 'react';
-import { render, screen, fireEvent,findByText } from '@testing-library/react';
-import EditPatient from './EditPatient';
+import { render, screen, fireEvent} from '@testing-library/react';
+import EditDoctor from './EditDoctor';
 import '@testing-library/jest-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import * as firebase from 'firebase/firestore';
-import { BrowserRouter as Router,MemoryRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, MemoryRouter, Routes, Route } from 'react-router-dom';
 
+jest.mock('../../__mocks__/firebase/firestore');
 
-jest.mock('../__mocks__/firebase/firestore');
 
 jest.mock('firebase/auth', () => ({
     createUserWithEmailAndPassword: jest.fn(),
     getAuth: jest.fn(() => ({})),
   }));
 
-describe('Edit Patient', () => {
-    beforeEach(() => {
-        jest.mock('../__mocks__/firebase/firestore');
-    
-      });
-    
-      afterEach(() => {
-        jest.unmock('../__mocks__/firebase/firestore');
-    
-      });
+describe('EditDoctor', () => {
+  beforeEach(() => {
+    jest.mock('../../__mocks__/firebase/firestore');
+
+  });
+
+  afterEach(() => {
+    jest.unmock('../../__mocks__/firebase/firestore');
+
+  });
 
   it('renders the personalId, name, surname field', () => {
     render(
+        <MemoryRouter initialEntries={['/doctor/1']}>
+          <Routes>
+            <Route path="/doctor/:userId" element={<EditDoctor />} />
+          </Routes>
+        </MemoryRouter>
+      );
+    expect(screen.getByTestId('personalID')).toBeInTheDocument();
+    expect(screen.getByTestId('name')).toBeInTheDocument();
+    expect(screen.getByTestId('surname')).toBeInTheDocument();
+  });
+
+  it('renders clinic and specialization', () => {
+    render(
         <Router>
-          <EditPatient />
+          <EditDoctor/>
         </Router>
       );
-    expect(screen.getByTestId('testid')).toBeInTheDocument();
-    expect(screen.getByTestId('testname')).toBeInTheDocument();
-    expect(screen.getByTestId('surname')).toBeInTheDocument();
+    expect(screen.getByTestId('clinic')).toBeInTheDocument();
+    expect(screen.getByTestId('specialization')).toBeInTheDocument();
   });
 
 
   it('renders the date, gender, address, phone field', () => {
     render(
         <Router>
-          <EditPatient />
+          <EditDoctor />
         </Router>
       );
    
@@ -50,10 +61,10 @@ describe('Edit Patient', () => {
     expect(screen.getByTestId('phone')).toBeInTheDocument();
   });
 
-  it('renders the email, passwor, confirmPassword', () => {
+  it('renders the email, password, confirmPassword', () => {
     render(
         <Router>
-          <EditPatient />
+          <EditDoctor />
         </Router>
       );
    
@@ -65,7 +76,7 @@ describe('Edit Patient', () => {
   it('renders submit', () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
     expect(screen.getByTestId('submit')).toBeInTheDocument();
@@ -75,30 +86,30 @@ describe('Edit Patient', () => {
   it('can type personalID', async () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
   
-    fireEvent.change(screen.getByTestId('testid'), { target: { value: '12345' } });
-    expect(await screen.getByTestId('testid').value).toBe('12345');
+    fireEvent.change(screen.getByTestId('personalID'), { target: { value: '12345' } });
+    expect(await screen.getByTestId('personalID').value).toBe('12345');
   });
 
 
   it('can type name', async () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
   
-    fireEvent.change(screen.getByTestId('testname'), { target: { value: 'John' } });
-    expect(await screen.getByTestId('testname').value).toBe('John');
+    fireEvent.change(screen.getByTestId('name'), { target: { value: 'John' } });
+    expect(await screen.getByTestId('name').value).toBe('John');
   });
 
   it('can type name', async () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
   
@@ -109,7 +120,7 @@ describe('Edit Patient', () => {
   it('can type date', async () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
   
@@ -121,7 +132,7 @@ describe('Edit Patient', () => {
   it('can type gender', async () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
   
@@ -132,7 +143,7 @@ describe('Edit Patient', () => {
   it('can type address', async () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
   
@@ -143,7 +154,7 @@ describe('Edit Patient', () => {
   it('can type phone number', async () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
   
@@ -151,11 +162,22 @@ describe('Edit Patient', () => {
     expect(await screen.getByTestId('phone').value).toBe('1234567890');
   });
 
+  it('can type clinic name', async () => {
+    render(
+      <Router>
+        <EditDoctor />
+      </Router>
+    );
+  
+    fireEvent.change(screen.getByTestId('clinic'), { target: { value: 'Ambulance' } });
+    expect(await screen.getByTestId('clinic').value).toBe('Ambulance');
+  });
+
 
   it('can type email', async () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
   
@@ -166,7 +188,7 @@ describe('Edit Patient', () => {
   it('can type password', async () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
   
@@ -177,7 +199,7 @@ describe('Edit Patient', () => {
   it('can type confirm password', async () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
   
@@ -188,7 +210,7 @@ describe('Edit Patient', () => {
   it('shows error message when fields are empty and submit is clicked', async () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
     fireEvent.click(screen.getByRole('button', { name: /edit/i }));
@@ -198,7 +220,7 @@ describe('Edit Patient', () => {
   it('shows error message when password and confirm password do not match', async () => {
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
     fireEvent.change(await screen.getByTestId('password'), { target: { value: 'Secure123' } });
@@ -210,7 +232,7 @@ describe('Edit Patient', () => {
   it('shows an error when all fields are not filled', async () => {
     render(
         <Router>
-          <EditPatient />
+          <EditDoctor />
         </Router>
       );
     
@@ -225,11 +247,11 @@ describe('Edit Patient', () => {
   it('shows an error when name or surname contain non-letter characters', async () => {
     render(
         <Router>
-          <EditPatient />
+          <EditDoctor />
         </Router>
       );
     
-    const nameInput = screen.getByTestId('testname');
+    const nameInput = screen.getByTestId('name');
     const surnameInput = screen.getByTestId('surname');
     const submitButton = screen.getByTestId('submit');
     
@@ -243,7 +265,7 @@ describe('Edit Patient', () => {
   it('shows an error when email format is invalid', async () => {
     render(
         <Router>
-          <EditPatient />
+          <EditDoctor />
         </Router>
       );
     
@@ -259,7 +281,7 @@ describe('Edit Patient', () => {
   it('shows an error when password format is invalid', async () => {
     render(
         <Router>
-          <EditPatient />
+          <EditDoctor />
         </Router>
       );
     
@@ -271,7 +293,7 @@ describe('Edit Patient', () => {
     fireEvent.change(confirmPasswordInput, { target: { value: 'short' } });
     fireEvent.click(submitButton);
     
-    expect(await screen.findByText('Password should be between 8 and 20 characters, contain at least one number, and the rest can be letters.')).toBeInTheDocument();
+    expect(await screen.findByText('Password should be between 8 and 20 characters and contain at least one number.')).toBeInTheDocument();
   });
   
 
@@ -280,12 +302,12 @@ describe('Edit Patient', () => {
   
     render(
       <Router>
-        <EditPatient />
+        <EditDoctor />
       </Router>
     );
   
-    fireEvent.change(await screen.getByTestId('testid'), { target: { value: '12345' } });
-    fireEvent.change(await screen.getByTestId('testname'), { target: { value: 'John' } });
+    fireEvent.change(await screen.getByTestId('personalID'), { target: { value: '12345' } });
+    fireEvent.change(await screen.getByTestId('name'), { target: { value: 'John' } });
     fireEvent.change(await screen.getByTestId('confirmPassword'), { target: { value: 'Secure123' } });
   
     fireEvent.click(screen.getByRole('button', { name: /edit/i }));
