@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const AppointmentDetails = () => {
   const { appointmentId } = useParams();
@@ -15,7 +15,6 @@ const AppointmentDetails = () => {
       if (docSnap.exists()) {
         setDetails(docSnap.data());
       } else {
-        // Handle the error
         console.log("No such document!");
       }
     };
@@ -33,8 +32,8 @@ const AppointmentDetails = () => {
       <p>Diagnosis: {details.diagnosis}</p>
       <p>Therapy: {details.therapy}</p>
       {details.fileURL && (
-            <iframe className="iframe" src={details.fileURL}></iframe>
-        )}
+        <iframe className="iframe" src={details.fileURL}></iframe>
+      )}
     </div>
   );
 };

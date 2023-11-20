@@ -1,102 +1,96 @@
-import React from 'react';
-import { cleanup, render, screen,userEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import DoctorPage from './indexDoctor';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import React from "react";
+import { cleanup, render, screen, userEvent } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import DoctorPage from "./indexDoctor";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 
-jest.mock('../../__mocks__/firebase/firestore');
+jest.mock("../../__mocks__/firebase/firestore");
 
-
-describe('Doctor Page', () => {
+describe("Doctor Page", () => {
   beforeEach(() => {
-    jest.mock('../../__mocks__/firebase/firestore');
+    jest.mock("../../__mocks__/firebase/firestore");
   });
 
   afterEach(() => {
-    jest.unmock('../../__mocks__/firebase/firestore');
+    jest.unmock("../../__mocks__/firebase/firestore");
   });
 
-  test('renders Menu item Home', async () => {
+  test("renders Menu item Home", async () => {
     render(
-      <MemoryRouter initialEntries={['/doctor/1']}>
+      <MemoryRouter initialEntries={["/doctor/1"]}>
         <Routes>
           <Route path="/doctor/:userId" element={<DoctorPage />} />
         </Routes>
       </MemoryRouter>
-       
     );
-  
+
     expect(screen.getByText(/Home/i)).toBeInTheDocument();
   });
-  
-  test('renders Menu item Upcoming App', async () => {
+
+  test("renders Menu item Upcoming App", async () => {
     render(
-      <MemoryRouter initialEntries={['/doctor/1']}>
+      <MemoryRouter initialEntries={["/doctor/1"]}>
         <Routes>
           <Route path="/doctor/:userId" element={<DoctorPage />} />
         </Routes>
       </MemoryRouter>
-       
     );
-  
+
     expect(screen.getByText(/Upcoming Appointments/i)).toBeInTheDocument();
   });
 
-  
-  test('renders Menu item Set Availability', async () => {
+  test("renders Menu item Set Availability", async () => {
     render(
-      <MemoryRouter initialEntries={['/doctor/1']}>
+      <MemoryRouter initialEntries={["/doctor/1"]}>
         <Routes>
           <Route path="/doctor/:userId" element={<DoctorPage />} />
         </Routes>
       </MemoryRouter>
-       
     );
-  
-    expect(screen.getByText(/Set Your Availability/i)).toBeInTheDocument();
+
+    expect(screen.getByText(/Set Availability/i)).toBeInTheDocument();
   });
 
-  test('renders Menu item List of App', async () => {
+  test("renders Menu item List of App", async () => {
     render(
-      <MemoryRouter initialEntries={['/doctor/1']}>
+      <MemoryRouter initialEntries={["/doctor/1"]}>
         <Routes>
           <Route path="/doctor/:userId" element={<DoctorPage />} />
         </Routes>
       </MemoryRouter>
-       
     );
-  
+
     expect(screen.getByText(/List Of Appointments/i)).toBeInTheDocument();
   });
-  
-  test('renders Menu item Register Patient', async () => {
+
+  test("renders Menu item Register Patient", async () => {
     render(
-      <MemoryRouter initialEntries={['/doctor/1']}>
+      <MemoryRouter initialEntries={["/doctor/1"]}>
         <Routes>
           <Route path="/doctor/:userId" element={<DoctorPage />} />
         </Routes>
       </MemoryRouter>
-       
     );
-  
+
     expect(screen.getByText(/Register Patient/i)).toBeInTheDocument();
   });
-  
-  test('renders Menu button show details', async () => {
+
+  test("renders Menu button show details", async () => {
     render(
-      <MemoryRouter initialEntries={['/doctor/1']}>
+      <MemoryRouter initialEntries={["/doctor/1"]}>
         <Routes>
           <Route path="/doctor/:userId" element={<DoctorPage />} />
         </Routes>
       </MemoryRouter>
-       
     );
-    expect(screen.getByRole('button', { name: /Show Details/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Show Details/i })
+    ).toBeInTheDocument();
   });
 
-  test('renders Welcome message', async () => {
+  test("renders Welcome message", async () => {
     render(
-      <MemoryRouter initialEntries={['/doctor/1']}>
+      <MemoryRouter initialEntries={["/doctor/1"]}>
         <Routes>
           <Route path="/doctor/:userId" element={<DoctorPage />} />
         </Routes>
@@ -107,21 +101,21 @@ describe('Doctor Page', () => {
     expect(welcomeElement).toBeInTheDocument();
   });
 
-  test('renders Logout button', async () => {
+  test("renders Logout button", async () => {
     render(
-      <MemoryRouter initialEntries={['/doctor/1']}>
+      <MemoryRouter initialEntries={["/doctor/1"]}>
         <Routes>
           <Route path="/doctor/:userId" element={<DoctorPage />} />
         </Routes>
       </MemoryRouter>
     );
 
-    expect(screen.getByRole('button', { name: /Logout/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Logout/ })).toBeInTheDocument();
   });
 
-  test('renders Register Patient button', async () => {
+  test("renders Register Patient button", async () => {
     render(
-      <MemoryRouter initialEntries={['/doctor/1']}>
+      <MemoryRouter initialEntries={["/doctor/1"]}>
         <Routes>
           <Route path="/doctor/:userId" element={<DoctorPage />} />
         </Routes>
@@ -131,24 +125,23 @@ describe('Doctor Page', () => {
     expect(screen.getByText(/Register Patient/i)).toBeInTheDocument();
   });
 
-  test('renders ShowDetails button', async () => {
+  test("renders ShowDetails button", async () => {
     render(
-      <MemoryRouter initialEntries={['/doctor/1']}>
+      <MemoryRouter initialEntries={["/doctor/1"]}>
         <Routes>
           <Route path="/doctor/:userId" element={<DoctorPage />} />
         </Routes>
       </MemoryRouter>
     );
 
-    expect(screen.getByRole('button', { name: /Show Details/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Show Details/ })
+    ).toBeInTheDocument();
   });
 
-
-
-
-  test('renders Todays Appointments', async () => {
+  test("renders Todays Appointments", async () => {
     render(
-      <MemoryRouter initialEntries={['/doctor/1']}>
+      <MemoryRouter initialEntries={["/doctor/1"]}>
         <Routes>
           <Route path="/doctor/:userId" element={<DoctorPage />} />
         </Routes>
@@ -158,11 +151,4 @@ describe('Doctor Page', () => {
     const todaysAppointmentElement = screen.getByText(/Today's Appointments/i);
     expect(todaysAppointmentElement).toBeInTheDocument();
   });
-
-
-
-
-
-
 });
-

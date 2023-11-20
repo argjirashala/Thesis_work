@@ -1,4 +1,4 @@
-import AllBookedApp from "./AllBookedApp";
+import FinishedApp from "./FinishedAppointments";
 import React from "react";
 import { cleanup, render, screen, userEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -8,7 +8,7 @@ test("renders Logout button", async () => {
   render(
     <MemoryRouter initialEntries={["/patient/1"]}>
       <Routes>
-        <Route path="/patient/:userId" element={<AllBookedApp />} />
+        <Route path="/patient/:userId" element={<FinishedApp />} />
       </Routes>
     </MemoryRouter>
   );
@@ -20,7 +20,7 @@ test("renders ShowDetails button", async () => {
   render(
     <MemoryRouter initialEntries={["/patient/1"]}>
       <Routes>
-        <Route path="/patient/:userId" element={<AllBookedApp />} />
+        <Route path="/patient/:userId" element={<FinishedApp />} />
       </Routes>
     </MemoryRouter>
   );
@@ -34,7 +34,7 @@ test("renders menu item Home", async () => {
   render(
     <MemoryRouter initialEntries={["/patient/1"]}>
       <Routes>
-        <Route path="/patient/:userId" element={<AllBookedApp />} />
+        <Route path="/patient/:userId" element={<FinishedApp />} />
       </Routes>
     </MemoryRouter>
   );
@@ -46,36 +46,34 @@ test("renders menu item Booked appointments", async () => {
   render(
     <MemoryRouter initialEntries={["/patient/1"]}>
       <Routes>
-        <Route path="/patient/:userId" element={<AllBookedApp />} />
+        <Route path="/patient/:userId" element={<FinishedApp />} />
       </Routes>
     </MemoryRouter>
   );
 
-  expect(screen.getAllByText(/Booked Appointments/)[1]).toBeInTheDocument();
+  expect(screen.getByText(/Booked Appointments/)).toBeInTheDocument();
 });
 
 test("renders menu item Finished appointments", async () => {
   render(
     <MemoryRouter initialEntries={["/patient/1"]}>
       <Routes>
-        <Route path="/patient/:userId" element={<AllBookedApp />} />
+        <Route path="/patient/:userId" element={<FinishedApp />} />
       </Routes>
     </MemoryRouter>
   );
 
-  expect(screen.getByText(/Finished Appointments/)).toBeInTheDocument();
+  expect(screen.getAllByText(/Finished Appointments/)[0]).toBeInTheDocument();
 });
 
-test("renders Booked appointments", async () => {
+test("renders Finished appointments", async () => {
   render(
     <MemoryRouter initialEntries={["/patient/1"]}>
       <Routes>
-        <Route path="/patient/:userId" element={<AllBookedApp />} />
+        <Route path="/patient/:userId" element={<FinishedApp />} />
       </Routes>
     </MemoryRouter>
   );
 
-  const bookAppointmentsElement = expect(
-    screen.getAllByText(/Booked Appointments/)[0]
-  ).toBeInTheDocument();
+  expect(screen.getAllByText(/Finished Appointments/)[1]).toBeInTheDocument();
 });

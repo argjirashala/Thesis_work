@@ -1,14 +1,12 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
 import { useNavigate } from "react-router-dom";
-import Logout from "./Logout"; 
-import LogoutButton from "./LogoutButton"; 
+import Logout from "./Logout";
 
-// Mocking useNavigate
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
-  useNavigate: jest.fn()
+  useNavigate: jest.fn(),
 }));
 
 describe("Logout", () => {
@@ -22,16 +20,11 @@ describe("Logout", () => {
     expect(getByText("Logging out...")).toBeInTheDocument();
     expect(mockNavigate).not.toHaveBeenCalled();
 
-    // Fast-forward time
     jest.advanceTimersByTime(2000);
 
     expect(mockNavigate).toHaveBeenCalledTimes(1);
     expect(mockNavigate).toHaveBeenCalledWith("/");
 
-    jest.useRealTimers();  // Clean up and use the real timers
+    jest.useRealTimers();
   });
 });
-
-
-
-

@@ -1,12 +1,11 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { useNavigate } from "react-router-dom";
-import LogoutButton from "./LogoutButton";  // Adjust the import path according to your file structure
+import LogoutButton from "./LogoutButton";
 
-// Mocking useNavigate
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
-  useNavigate: jest.fn()
+  useNavigate: jest.fn(),
 }));
 
 describe("LogoutButton", () => {

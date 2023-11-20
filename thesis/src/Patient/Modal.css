@@ -10,7 +10,7 @@
   justify-content: center;
   z-index: 1000;
   pointer-events: none;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 
 .modal-content {
@@ -22,9 +22,9 @@
   max-width: 1000px;
   max-height: 1000px;
   width: 80%;
-  height: 80%; /* Added this to specify the modal's height */
+  height: 80%;
   pointer-events: auto;
-  overflow-y: auto; /* This will ensure content doesn't overflow the modal */
+  overflow-y: auto;
 }
 
 .close-btn {
@@ -35,7 +35,5 @@
   border: none;
   font-size: 20px;
   cursor: pointer;
-  z-index: 1; /* Ensures the close button stays above the iframe */
+  z-index: 1;
 }
-
-

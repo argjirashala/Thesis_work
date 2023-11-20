@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { collection, addDoc, getFirestore } from "firebase/firestore"; 
-import { db } from './firebase';  // import Firestore database
+import React, { useEffect } from "react";
+import { collection, addDoc, getFirestore } from "firebase/firestore";
+import { db } from "./firebase"; // import Firestore database
 
 function FirebaseTest() {
   useEffect(() => {
@@ -9,7 +9,7 @@ function FirebaseTest() {
         await addDoc(collection(db, "test"), {
           first: "Ada",
           last: "Lovelace",
-          born: 1815
+          born: 1815,
         });
       } catch (e) {
         console.error("Error adding document: ", e);

@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 function LogoutButton() {
-    let navigate = useNavigate();
+  let navigate = useNavigate();
 
   const handleLogout = () => {
     navigate("/logout");
@@ -10,7 +10,7 @@ function LogoutButton() {
 
   return (
     <>
-    <button onClick={handleLogout}>Logout</button>
+      <button onClick={handleLogout}>Logout</button>
     </>
   );
 }

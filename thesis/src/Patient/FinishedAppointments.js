@@ -17,7 +17,7 @@ import Modal from "./Modal";
 import LogoutButton from "../Logout/LogoutButton";
 import { sendPasswordResetEmail, getAuth } from "firebase/auth";
 
-function AllBookedApp() {
+function FinishedApp() {
   const { userId } = useParams();
   const [doctors, setDoctors] = useState([]);
   const [specialization, setSpecialization] = useState("");
@@ -99,7 +99,7 @@ function AllBookedApp() {
       const q = query(
         collection(db, "appointments"),
         where("patientId", "==", userId)
-      ); // Replace with actual patient's ID
+      );
       const querySnapshot = await getDocs(q);
       const fetchedAppointments = querySnapshot.docs.map((doc) => doc.data());
 
@@ -143,8 +143,8 @@ function AllBookedApp() {
     }
   }, [bookedAppointments]);
 
-  const notfinished = bookedAppointments.filter(
-    (app) => !app.diagnosis && !app.therapy
+  const finished = bookedAppointments.filter(
+    (app) => app.diagnosis && app.therapy
   );
 
   return (
@@ -191,8 +191,7 @@ function AllBookedApp() {
               {detailsVisible ? "Hide Details" : "Show Details"}
             </button>
             &nbsp;&nbsp;
-            <LogoutButton style={{ marginLeft: "auto" }} />{" "}
-            {/* This will be pushed to the right corner */}
+            <LogoutButton style={{ marginLeft: "auto" }} />
           </div>
         </div>
       </nav>
@@ -209,9 +208,9 @@ function AllBookedApp() {
       )}
 
       <div className="booked-appointments">
-        <h2>Your Booked Appointments</h2>
+        <h2>Finished Appointments</h2>
         <div className="appointments-row">
-          {notfinished.map((appointment) => (
+          {finished.map((appointment) => (
             <div
               key={`${appointment.date}-${appointment.time}`}
               className="appointment-card"
@@ -242,4 +241,4 @@ function AllBookedApp() {
   );
 }
 
-export default AllBookedApp;
+export default FinishedApp;
