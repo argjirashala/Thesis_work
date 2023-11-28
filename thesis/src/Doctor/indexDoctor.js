@@ -85,12 +85,6 @@ function DoctorPage() {
     fetchDoctorDetails();
   }, [userId]);
 
-  const handleSaveAvailability = async () => {
-    const docRef = doc(db, "doctors", userId);
-    await setDoc(docRef, { availability }, { merge: true });
-    alert("Availability saved successfully!");
-  };
-
   const handleDiagnosisChange = (e) => {
     setDiagnosisText(e.target.value);
   };

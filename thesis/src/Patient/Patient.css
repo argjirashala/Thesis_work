@@ -236,3 +236,24 @@ table tbody tr:hover {
   background-color: #e3342f;
   color: white;
 }
+
+.filter-section {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  align-items: center;
+  background-color: #1c4da7;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 600px) {
+  .filter-section {
+    flex-direction: column;
+  }
+
+  .filter-section > * {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}

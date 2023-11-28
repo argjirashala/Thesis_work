@@ -126,7 +126,7 @@ function EditPatient() {
     <div className="register-wrapper">
       <div className="parent-container">
         <div className="register-form">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="mainFormRegister">
             <label htmlFor="personalID">
               Personal ID:
               <input
@@ -259,13 +259,7 @@ function EditPatient() {
             <br></br>
             <br></br>
             {errors.length > 0 && (
-              <div
-                style={{
-                  backgroundColor: "pink",
-                  width: "400px",
-                  height: "100px",
-                }}
-              >
+              <div className="error-div">
                 {errors.map((error, index) => (
                   <li key={index}>{error}</li>
                 ))}

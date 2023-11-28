@@ -148,7 +148,7 @@ function LoginPage() {
                   <br></br>
 
                   <label>
-                    Email:
+                    <p style={{ color: "black" }}>Email:</p>
                     <input
                       type="text"
                       name="email"
@@ -157,9 +157,8 @@ function LoginPage() {
                       className="input input-field"
                     />
                   </label>
-                  <br />
                   <label>
-                    Password:
+                    <p style={{ color: "black" }}>Password:</p>
                     <input
                       type="password"
                       name="password"

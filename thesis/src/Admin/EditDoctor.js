@@ -127,7 +127,7 @@ function EditDoctor() {
     <div className="register-wrapper">
       <div className="parent-container">
         <div className="register-form">
-          <form onSubmit={handleSubmit} className="mainForm">
+          <form onSubmit={handleSubmit} className="mainFormRegister">
             <label>
               Personal ID:
               <input
@@ -360,13 +360,7 @@ function EditDoctor() {
             <br></br>
             <br></br>
             {errors.length > 0 && (
-              <div
-                style={{
-                  backgroundColor: "pink",
-                  width: "400px",
-                  height: "100px",
-                }}
-              >
+              <div className="error-div">
                 {errors.map((error, index) => (
                   <li key={index}>{error}</li>
                 ))}

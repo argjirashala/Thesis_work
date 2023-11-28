@@ -12,6 +12,8 @@ import {
   getDoc,
   updateDoc,
 } from "firebase/firestore";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "./Patient.css";
 import Modal from "./Modal";
 import LogoutButton from "../Logout/LogoutButton";
@@ -31,6 +33,9 @@ function FinishedApp() {
   const [appointmentToShow, setAppointmentToShow] = useState(null);
   const [patientDetails, setPatientDetails] = useState({});
   const [detailsVisible, setDetailsVisible] = useState(false);
+  const [dateFilter, setDateFilter] = useState(null);
+  const [nameFilter, setNameFilter] = useState("");
+  const [surnameFilter, setSurnameFilter] = useState("");
 
   const handleChangePassword = () => {
     const auth = getAuth();
@@ -147,6 +152,24 @@ function FinishedApp() {
     (app) => app.diagnosis && app.therapy
   );
 
+  const filterFinishedAppointments = () => {
+    return finished.filter((app) => {
+      const matchesDate = dateFilter
+        ? new Date(app.date).toDateString() === dateFilter.toDateString()
+        : true;
+      const matchesName = nameFilter
+        ? app.doctorName.toLowerCase().includes(nameFilter.toLowerCase())
+        : true;
+      const matchesSurname = surnameFilter
+        ? app.doctorSurname.toLowerCase().includes(surnameFilter.toLowerCase())
+        : true;
+
+      return matchesDate && matchesName && matchesSurname;
+    });
+  };
+
+  const filteredFinishedAppointments = filterFinishedAppointments();
+
   return (
     <>
       <nav>
@@ -209,8 +232,29 @@ function FinishedApp() {
 
       <div className="booked-appointments">
         <h2>Finished Appointments</h2>
+        <div className="filter-section">
+          <DatePicker
+            selected={dateFilter}
+            onChange={(date) => setDateFilter(date)}
+            dateFormat="yyyy-MM-dd"
+            isClearable
+            placeholderText="Filter by date"
+          />
+          <input
+            type="text"
+            placeholder="Filter by doctor's name"
+            value={nameFilter}
+            onChange={(e) => setNameFilter(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Filter by doctor's surname"
+            value={surnameFilter}
+            onChange={(e) => setSurnameFilter(e.target.value)}
+          />
+        </div>
         <div className="appointments-row">
-          {finished.map((appointment) => (
+          {filteredFinishedAppointments.map((appointment) => (
             <div
               key={`${appointment.date}-${appointment.time}`}
               className="appointment-card"

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
   getFirestore,
@@ -18,6 +19,9 @@ function PatientDetailsTable() {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const db = getFirestore();
   const [editingPatient, setEditingPatient] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [nameFilter, setNameFilter] = useState("");
+  const [surnameFilter, setSurnameFilter] = useState("");
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -77,11 +81,80 @@ function PatientDetailsTable() {
     }
   };
 
+  const filterPatients = () => {
+    return patients.filter((patient) => {
+      const matchesDate = selectedDate
+        ? new Date(patient.date).toDateString() === selectedDate.toDateString()
+        : true;
+      const matchesName = nameFilter
+        ? patient.patientName.toLowerCase().includes(nameFilter.toLowerCase())
+        : true;
+      const matchesSurname = surnameFilter
+        ? patient.patientSurname
+            .toLowerCase()
+            .includes(surnameFilter.toLowerCase())
+        : true;
+
+      return matchesDate && matchesName && matchesSurname;
+    });
+  };
+
+  const filteredPatients = filterPatients();
+
   return (
     <div className="booked-appointments">
       <h2>List of Appointments</h2>
+      {/* <div className="filter-section">
+        <DatePicker
+          selected={selectedDate}
+          onChange={(date) => setSelectedDate(date)}
+          dateFormat="yyyy-MM-dd"
+          isClearable
+          placeholderText="Filter by date"
+        />
+        <input
+          type="text"
+          placeholder="Filter by name"
+          value={nameFilter}
+          onChange={(e) => setNameFilter(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Filter by surname"
+          value={surnameFilter}
+          onChange={(e) => setSurnameFilter(e.target.value)}
+        />
+      </div> */}
       <table>
         <thead>
+          <tr className="filter-row">
+            <th>
+              <input
+                type="text"
+                placeholder="Filter by name"
+                value={nameFilter}
+                onChange={(e) => setNameFilter(e.target.value)}
+              />
+            </th>
+            <th>
+              <input
+                type="text"
+                placeholder="Filter by surname"
+                value={surnameFilter}
+                onChange={(e) => setSurnameFilter(e.target.value)}
+              />
+            </th>
+            <th>
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                dateFormat="yyyy-MM-dd"
+                isClearable
+                placeholderText="Filter by date"
+              />
+            </th>
+            <th colspan="2"></th>
+          </tr>
           <tr>
             <th>Name</th>
             <th>Surname</th>
@@ -91,7 +164,7 @@ function PatientDetailsTable() {
           </tr>
         </thead>
         <tbody>
-          {patients.map((patient) => (
+          {filteredPatients.map((patient) => (
             <tr key={patient.id}>
               <td>{patient.patientName}</td>
               <td>{patient.patientSurname}</td>

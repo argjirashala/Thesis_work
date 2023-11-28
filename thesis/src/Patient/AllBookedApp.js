@@ -143,8 +143,10 @@ function AllBookedApp() {
     }
   }, [bookedAppointments]);
 
+  const todayDate = new Date().toISOString().split("T")[0];
+
   const notfinished = bookedAppointments.filter(
-    (app) => !app.diagnosis && !app.therapy
+    (app) => !app.diagnosis && !app.therapy && app.date >= todayDate
   );
 
   return (

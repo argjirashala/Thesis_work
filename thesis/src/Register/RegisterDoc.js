@@ -123,7 +123,7 @@ function RegisterDoc() {
     <div className="register-wrapper">
       <div className="parent-container">
         <div className="register-form">
-          <form className="mainForm" onSubmit={handleSubmit}>
+          <form className="mainFormRegister" onSubmit={handleSubmit}>
             <div className="register forms form-style">
               <label>
                 Personal ID:
@@ -344,19 +344,14 @@ function RegisterDoc() {
                 data-testId="submit"
                 type="submit"
                 className="input submit"
+                style={{ color: "white" }}
               >
                 Register
               </button>
               <br></br>
               <br></br>
               {errors.length > 0 && (
-                <div
-                  style={{
-                    backgroundColor: "pink",
-                    width: "400px",
-                    height: "100px",
-                  }}
-                >
+                <div className="error-div">
                   {errors.map((error, index) => (
                     <li key={index}>{error}</li>
                   ))}
