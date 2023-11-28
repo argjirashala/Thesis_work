@@ -80,9 +80,18 @@ function PatientPage() {
     fetchDoctors();
   }, [specialization]);
 
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0];
+  };
+
   useEffect(() => {
     if (selectedDoctor) {
-      setAvailableDates(Object.keys(selectedDoctor.availability || {}));
+      const todayDate = getTodayDate();
+      const futureDates = Object.keys(selectedDoctor.availability || {}).filter(
+        (date) => date >= todayDate
+      );
+      setAvailableDates(futureDates);
     }
   }, [selectedDoctor]);
 
@@ -102,7 +111,7 @@ function PatientPage() {
       const q = query(
         collection(db, "appointments"),
         where("patientId", "==", userId)
-      ); // Replace with actual patient's ID
+      );
       const querySnapshot = await getDocs(q);
       const fetchedAppointments = querySnapshot.docs.map((doc) => doc.data());
 
@@ -375,7 +384,11 @@ function PatientPage() {
             </label>
             {availableSlots.map((slot) => (
               <>
-                <button key={slot} onClick={() => handleSlotSelection(slot)}>
+                <button
+                  key={slot}
+                  onClick={() => handleSlotSelection(slot)}
+                  className={appointment.time === slot ? "selected-slot" : ""}
+                >
                   {slot}
                 </button>
                 &nbsp;&nbsp;
@@ -383,17 +396,7 @@ function PatientPage() {
             ))}
             <br></br>
             <br></br>
-            <button
-              style={{
-                backgroundColor: "green",
-                color: "white",
-                padding: "0.5em 1em",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-              onClick={handleBookAppointment}
-            >
+            <button className="confirm-button" onClick={handleBookAppointment}>
               Confirm
             </button>
             &nbsp;&nbsp;&nbsp;&nbsp;

@@ -132,7 +132,7 @@ function UpcomingApp() {
               backgroundColor: isActive ? " #005cbf" : "",
             })}
           >
-            Set Your Availability
+            Set Availability
           </NavLink>
           <NavLink
             to={`/upcomingappointments/${userId}`}

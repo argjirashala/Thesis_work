@@ -237,6 +237,25 @@ table tbody tr:hover {
   color: white;
 }
 
+.remove-slot-button:hover {
+  background-color: #a3140f;
+  color: white;
+}
+
+.confirm-button {
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: rgb(10, 152, 10);
+  color: white;
+}
+
+.confirm-button:hover {
+  background-color: green;
+  color: white;
+}
+
 .filter-section {
   display: flex;
   gap: 1rem;
@@ -256,4 +275,9 @@ table tbody tr:hover {
     width: 100%;
     margin-bottom: 0.5rem;
   }
+}
+
+.selected-slot {
+  background-color: #f28500;
+  color: white;
 }

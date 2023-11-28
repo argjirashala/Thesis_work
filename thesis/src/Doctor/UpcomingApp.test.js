@@ -37,7 +37,7 @@ test("renders Menu item Set Availability", async () => {
     </MemoryRouter>
   );
 
-  expect(screen.getByText(/Set Your Availability/i)).toBeInTheDocument();
+  expect(screen.getByText(/Set Availability/i)).toBeInTheDocument();
 });
 
 test("renders Menu item List of App", async () => {
