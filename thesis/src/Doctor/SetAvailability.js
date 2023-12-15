@@ -94,6 +94,9 @@ function SetAvailability() {
     const docRef = doc(db, "doctors", userId);
     await setDoc(docRef, { availability }, { merge: true });
     alert("Availability saved successfully!");
+    setSelectedDate(new Date());
+    setStartTime("");
+    setEndTime("");
   };
 
   return (
@@ -125,7 +128,6 @@ function SetAvailability() {
           >
             Set Availability
           </NavLink>
-          {/* <NavLink to={`/todaysappointments/${userId}`} activeClassName="active-link">Today's Appointments</NavLink> */}
           <NavLink
             to={`/upcomingappointments/${userId}`}
             style={({ isActive }) => ({
@@ -171,7 +173,6 @@ function SetAvailability() {
         <h2>Set Your Availability</h2>
 
         <div className="availability-section">
-          {/* <DatePicker selected={selectedDate} onChange={handleDateChange} /> */}
           <div className="time-picker-container">
             <label style={{ fontWeight: "bold" }}>Date:</label>
             <DatePicker

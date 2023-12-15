@@ -187,7 +187,6 @@ function RegisterPage() {
                   <option value="">Select...</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
-                  <option value="not_specified">Not Specified</option>
                 </select>
               </label>
               <br></br>

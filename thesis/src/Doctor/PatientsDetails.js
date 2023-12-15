@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 import "./Doctor.css";
 import EditPatientModal from "./EditPatientModal";
+import { useParams } from "react-router-dom";
 
 function PatientDetailsTable() {
   const [patients, setPatients] = useState([]);
@@ -22,6 +23,29 @@ function PatientDetailsTable() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [nameFilter, setNameFilter] = useState("");
   const [surnameFilter, setSurnameFilter] = useState("");
+  const { userId } = useParams();
+
+  const downloadPatientDetails = () => {
+    if (!selectedPatient) return;
+
+    const content = `
+      Name: ${selectedPatient.patientName}
+      Surname: ${selectedPatient.patientSurname}
+      Diagnosis: ${selectedPatient.diagnosis}
+      Therapy: ${selectedPatient.therapy}
+      Extra Information: ${selectedPatient.info}
+    `;
+
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${selectedPatient.patientName}_details.txt`;
+    link.click();
+
+    URL.revokeObjectURL(url);
+  };
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -99,32 +123,13 @@ function PatientDetailsTable() {
     });
   };
 
-  const filteredPatients = filterPatients();
+  const filterDocId = filterPatients();
+
+  const filteredPatients = filterDocId.filter((app) => app.doctorId == userId);
 
   return (
     <div className="booked-appointments">
       <h2>List of Appointments</h2>
-      {/* <div className="filter-section">
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-          dateFormat="yyyy-MM-dd"
-          isClearable
-          placeholderText="Filter by date"
-        />
-        <input
-          type="text"
-          placeholder="Filter by name"
-          value={nameFilter}
-          onChange={(e) => setNameFilter(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Filter by surname"
-          value={surnameFilter}
-          onChange={(e) => setSurnameFilter(e.target.value)}
-        />
-      </div> */}
       <table>
         <thead>
           <tr className="filter-row">
@@ -206,6 +211,13 @@ function PatientDetailsTable() {
           {selectedPatient.fileURL && (
             <iframe className="iframe" src={selectedPatient.fileURL}></iframe>
           )}
+          <a href={selectedPatient.fileURL} download>
+            Download File
+          </a>
+          &nbsp;&nbsp;
+          <button className="confirm-button" onClick={downloadPatientDetails}>
+            Download Details
+          </button>
         </div>
       )}
     </div>

@@ -194,7 +194,6 @@ function AllBookedApp() {
             </button>
             &nbsp;&nbsp;
             <LogoutButton style={{ marginLeft: "auto" }} />{" "}
-            {/* This will be pushed to the right corner */}
           </div>
         </div>
       </nav>
