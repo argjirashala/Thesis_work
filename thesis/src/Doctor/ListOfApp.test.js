@@ -49,7 +49,7 @@ test("renders Menu item List of App", async () => {
     </MemoryRouter>
   );
 
-  expect(screen.getAllByText(/List Of Appointments/i)[0]).toBeInTheDocument();
+  expect(screen.getAllByText(/List of Appointments/i)[0]).toBeInTheDocument();
 });
 
 test("renders Menu item Register Patient", async () => {
@@ -97,5 +97,5 @@ test("renders List of Patients", async () => {
     </MemoryRouter>
   );
 
-  expect(screen.getAllByText(/List Of Appointments/i)[1]).toBeInTheDocument();
+  expect(screen.getAllByText(/List of Appointments/i)[1]).toBeInTheDocument();
 });

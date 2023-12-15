@@ -142,7 +142,7 @@ function SetAvailability() {
               backgroundColor: isActive ? " #005cbf" : "",
             })}
           >
-            List Of Appointments
+            List of Appointments
           </NavLink>
           <NavLink
             to={`/register`}

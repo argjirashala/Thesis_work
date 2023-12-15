@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { collection, addDoc, getFirestore } from "firebase/firestore";
-import { db } from "./firebase"; // import Firestore database
+import { db } from "./firebase";
 
 function FirebaseTest() {
   useEffect(() => {

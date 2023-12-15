@@ -18,8 +18,8 @@ describe("UpcomingApp Page Tests", () => {
     cy.contains("Set Availability").should("be.visible");
   });
 
-  it("renders Menu item List Of Appointments", () => {
-    cy.contains("List Of Appointments").should("be.visible");
+  it("renders Menu item List of Appointments", () => {
+    cy.contains("List of Appointments").should("be.visible");
   });
 
   it("renders Menu item Register Patient", () => {
@@ -35,7 +35,6 @@ describe("UpcomingApp Page Tests", () => {
   });
 
   it("renders Upcoming Appointments section", () => {
-    // Assuming there's a distinct section or heading for upcoming appointments
     cy.contains("Upcoming Appointments").should("be.visible");
   });
 });

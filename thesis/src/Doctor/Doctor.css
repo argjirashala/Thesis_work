@@ -43,7 +43,6 @@ button:hover {
   color: #fff;
 }
 
-/* Modal Styling */
 .modal {
   position: fixed;
   top: 50%;
@@ -512,12 +511,10 @@ thead tr.filter-row th input,
 thead tr.filter-row th .react-datepicker-wrapper {
   width: 100%;
   margin: 0;
-  /* border: 1px solid #ccc; */
   padding: 5px;
   box-sizing: border-box;
 }
 
-/* Optional: Style for the clear filter button if added */
 .clear-filters-btn {
   padding: 5px 10px;
   background-color: #d9edf7;

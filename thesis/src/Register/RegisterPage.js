@@ -251,7 +251,6 @@ function RegisterPage() {
               </label>
               <br></br>
               <br></br>
-              {/* ... */}
               <button
                 data-testId="submit"
                 type="submit"

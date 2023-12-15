@@ -35,7 +35,6 @@ describe("AdminPage", () => {
   ];
 
   beforeEach(() => {
-    // Setup mocks for Firestore
     firebase.getFirestore.mockReturnValue({});
     firebase.collection.mockReturnValue({});
     firebase.getDocs.mockResolvedValue({
@@ -57,22 +56,22 @@ describe("AdminPage", () => {
     expect(getByText("Doctors")).toBeInTheDocument();
   });
 
-  test("renders List Of Doctors menu item", () => {
+  test("renders List of Doctors menu item", () => {
     const { getByText } = render(
       <Router>
         <AdminPage />
       </Router>
     );
-    expect(getByText("List Of Doctors")).toBeInTheDocument();
+    expect(getByText("List of Doctors")).toBeInTheDocument();
   });
 
-  test("renders List Of Patients menu item", () => {
+  test("renders List of Patients menu item", () => {
     const { getByText } = render(
       <Router>
         <AdminPage />
       </Router>
     );
-    expect(getByText("List Of Patients")).toBeInTheDocument();
+    expect(getByText("List of Patients")).toBeInTheDocument();
   });
 
   test("renders Register Patient menu item", () => {
@@ -93,7 +92,7 @@ describe("AdminPage", () => {
     expect(getByText("Register Doctor")).toBeInTheDocument();
   });
 
-  test("renders List Of Patients menu item", () => {
+  test("renders List of Patients menu item", () => {
     const { getByRole } = render(
       <Router>
         <AdminPage />

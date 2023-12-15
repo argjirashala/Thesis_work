@@ -18,8 +18,8 @@ describe("ListOfApp Page Tests", () => {
     cy.contains("Set Availability").should("be.visible");
   });
 
-  it("renders Menu item List Of Appointments", () => {
-    cy.contains("List Of Appointments").should("be.visible");
+  it("renders Menu item List of Appointments", () => {
+    cy.contains("List of Appointments").should("be.visible");
   });
 
   it("renders Menu item Register Patient", () => {
@@ -35,7 +35,6 @@ describe("ListOfApp Page Tests", () => {
   });
 
   it("renders List of Appointments section", () => {
-    // Assuming there's a distinct section or heading for List of Appointments
-    cy.contains("List Of Appointments").should("be.visible");
+    cy.contains("List of Appointments").should("be.visible");
   });
 });

@@ -56,25 +56,25 @@ describe("ListOfPat", () => {
     expect(getByText("Patients")).toBeInTheDocument();
   });
 
-  test("renders List Of Doctors menu item", () => {
+  test("renders List of Doctors menu item", () => {
     const { getByText } = render(
       <Router>
         <ListOfPat />
       </Router>
     );
-    expect(getByText("List Of Doctors")).toBeInTheDocument();
+    expect(getByText("List of Doctors")).toBeInTheDocument();
   });
 
-  test("renders List Of Patients menu item", () => {
+  test("renders List of Patients menu item", () => {
     const { getByText } = render(
       <Router>
         <ListOfPat />
       </Router>
     );
-    expect(getByText("List Of Patients")).toBeInTheDocument();
+    expect(getByText("List of Patients")).toBeInTheDocument();
   });
 
-  test("renders List Of Patients menu item", () => {
+  test("renders List of Patients menu item", () => {
     const { getByRole } = render(
       <Router>
         <ListOfPat />

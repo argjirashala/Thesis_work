@@ -48,7 +48,6 @@ button:hover {
   color: #ffffff;
 }
 
-/* Modal Styling */
 .modal {
   position: fixed;
   top: 50%;
@@ -141,7 +140,6 @@ a:hover {
   background-color: #161f6d;
   display: flex;
   flex-direction: column;
-  /* background-color: #161F6D */
   color: white;
 }
 
@@ -175,13 +173,10 @@ a:hover {
 }
 
 .appointment-card-doc {
-  /* width: 350px; */
   margin: 15px;
   padding: 15px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  /* max-width: 1000px;
-  max-height: 1000px; */
   width: 1000px;
   height: 1000px;
   background-color: #161f6d;
@@ -235,13 +230,11 @@ table tbody tr:hover {
 }
 
 .iframe {
-  width: 100%; /* Fills the width of its container */
+  width: 100%;
   height: 600px;
-  /* height: calc(100% - 40px); Takes into account the padding and some extra room for the close button */
-  border: none; /* Removes default borders */
+  border: none;
 }
 
-/*Login*/
 .mainForm {
   position: absolute;
   top: 50%;
@@ -274,7 +267,6 @@ table tbody tr:hover {
 .input-field:focus {
   border: 2.5px solid #0a2558;
   padding: 5px;
-  /* background-color:  #3778C2; */
   color: #1f3770;
   font-weight: bold;
 }
@@ -343,25 +335,23 @@ table tbody tr:hover {
 }
 
 nav {
-  background-color: #004c8c; /* Adjust the color to match your brand */
+  background-color: #004c8c;
   padding: 1em;
 }
 
 nav a {
   text-decoration: none;
-  color: white; /* This color will stand out against the background */
-  /* background-color: #0066cc; */
+  color: white;
   padding: 10px 15px;
-  border-radius: 5px; /* Rounded corners */
-  transition: background-color 0.3s; /* Smooth transition for hover effect */
-  margin-right: 10px; /* Spacing between buttons */
-  font-weight: bold; /* Make the text bold */
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  margin-right: 10px;
+  font-weight: bold;
 }
 
 nav a:hover {
-  /* Prevents underlining on hover or click */
   background-color: #005cbf;
-  text-decoration: none; /* Ensure no underline */
+  text-decoration: none;
 }
 
 .input-field {
@@ -388,25 +378,17 @@ nav a:hover {
   font-weight: bold;
 }
 
-/* nav a:focus {
-  background-color: #005cbf;
-  outline: none; 
-} 
-*/
-
 @media (max-width: 768px) {
   nav a {
-    padding: 5px 10px; /* Smaller padding */
-    font-size: 0.9em; /* Smaller font size */
+    padding: 5px 10px;
+    font-size: 0.9em;
   }
 
-  /* For smaller screens, make each tab take full width */
   nav a {
     flex-basis: 100%;
     text-align: center;
   }
 
-  /* Hide the LogoutButton or make adjustments as necessary */
   .LogoutButton {
     display: none;
   }
@@ -421,34 +403,33 @@ nav a:hover {
 .time-inputs {
   display: flex;
   justify-content: space-between;
-  width: 100%; /* Adjust the width as needed */
-  margin-bottom: 1em; /* Space between inputs and button */
+  width: 100%;
+  margin-bottom: 1em;
   color: white;
   font-weight: bold;
 }
 
 .time-inputs > div {
-  margin: 0 30px; /* Adjust spacing between start and end time inputs */
+  margin: 0 30px;
 }
 
 .add-slot-button-container {
-  width: 100%; /* Adjust the width as needed */
+  width: 100%;
   display: flex;
   justify-content: center;
 }
 
 .input-field {
-  margin: 0 5px; /* Adjust spacing around inputs */
+  margin: 0 5px;
 }
 
-/* You may want to add some responsiveness */
 @media (max-width: 600px) {
   .time-inputs {
     flex-direction: column;
   }
 
   .time-inputs > div {
-    margin-bottom: 0.5em; /* Space between stacked inputs */
+    margin-bottom: 0.5em;
   }
 }
 
@@ -461,16 +442,16 @@ nav a:hover {
 .slot-item {
   display: flex;
   align-items: center;
-  margin-bottom: 0.5em; /* Space between slots */
+  margin-bottom: 0.5em;
 }
 
 .slot-text {
   flex-grow: 1;
   padding: 0.5em;
-  border: 1px solid #ccc; /* Border to look like a text field */
-  border-radius: 4px; /* Rounded corners */
-  background-color: #f8f8f8; /* Light background color */
-  margin-right: 1em; /* Space between the text and the button */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  margin-right: 1em;
   color: black;
 }
 
@@ -479,11 +460,10 @@ nav a:hover {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  background-color: #e3342f; /* Red color for remove button */
+  background-color: #e3342f;
   color: white;
 }
 
-/* Adjustments for responsiveness */
 @media (max-width: 768px) {
   .slot-item {
     flex-direction: column;
@@ -492,7 +472,7 @@ nav a:hover {
 
   .slot-text {
     margin-right: 0;
-    margin-bottom: 0.5em; /* Space between the text and the button on small screens */
+    margin-bottom: 0.5em;
   }
 
   .remove-slot-button {

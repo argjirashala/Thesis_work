@@ -99,7 +99,7 @@ function AllBookedApp() {
       const q = query(
         collection(db, "appointments"),
         where("patientId", "==", userId)
-      ); // Replace with actual patient's ID
+      );
       const querySnapshot = await getDocs(q);
       const fetchedAppointments = querySnapshot.docs.map((doc) => doc.data());
 

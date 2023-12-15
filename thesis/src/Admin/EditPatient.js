@@ -251,7 +251,6 @@ function EditPatient() {
             </label>
             <br></br>
             <br></br>
-            {/* ... */}
             <button data-testId="submit" type="submit" className="input submit">
               Edit
             </button>

@@ -9,12 +9,12 @@ describe("ListOfPat Tests", () => {
     cy.contains("Patients").should("be.visible");
   });
 
-  it("renders List Of Doctors menu item", () => {
-    cy.contains("List Of Doctors").should("be.visible");
+  it("renders List of Doctors menu item", () => {
+    cy.contains("List of Doctors").should("be.visible");
   });
 
-  it("renders List Of Patients menu item", () => {
-    cy.contains("List Of Patients").should("be.visible");
+  it("renders List of Patients menu item", () => {
+    cy.contains("List of Patients").should("be.visible");
   });
 
   it("renders Logout button", () => {

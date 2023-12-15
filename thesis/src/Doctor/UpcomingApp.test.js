@@ -49,7 +49,7 @@ test("renders Menu item List of App", async () => {
     </MemoryRouter>
   );
 
-  expect(screen.getByText(/List Of Appointments/i)).toBeInTheDocument();
+  expect(screen.getByText(/List of Appointments/i)).toBeInTheDocument();
 });
 
 test("renders Menu item Register Patient", async () => {

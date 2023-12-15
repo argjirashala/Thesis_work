@@ -18,8 +18,8 @@ describe("SetAvailability Page Tests", () => {
     cy.contains("Upcoming Appointments").should("be.visible");
   });
 
-  it("renders Menu item List Of Appointments", () => {
-    cy.contains("List Of Appointments").should("be.visible");
+  it("renders Menu item List of Appointments", () => {
+    cy.contains("List of Appointments").should("be.visible");
   });
 
   it("renders Menu item Register Patient", () => {

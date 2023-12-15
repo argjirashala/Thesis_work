@@ -61,7 +61,7 @@ function AdminPage() {
                 backgroundColor: isActive ? " #005cbf" : "",
               })}
             >
-              List Of Doctors
+              List of Doctors
             </NavLink>
             <NavLink
               to={`/patienttable`}
@@ -69,7 +69,7 @@ function AdminPage() {
                 backgroundColor: isActive ? " #005cbf" : "",
               })}
             >
-              List Of Patients
+              List of Patients
             </NavLink>
             <NavLink
               to={`/registerdoc`}

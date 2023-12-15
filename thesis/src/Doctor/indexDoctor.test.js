@@ -60,7 +60,7 @@ describe("Doctor Page", () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/List Of Appointments/i)).toBeInTheDocument();
+    expect(screen.getByText(/List of Appointments/i)).toBeInTheDocument();
   });
 
   test("renders Menu item Register Patient", async () => {
